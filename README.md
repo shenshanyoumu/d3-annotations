@@ -115,7 +115,7 @@
 &ensp;&ensp;针对给定的点计算维诺图，这是一种复杂的图表结构
 
 （31）Zooming  
-&ensp;&ensp;对 SVG 图表、HTML 图表或者 canvas 图表进行平移操作
+&ensp;&ensp;对 SVG 图表、HTML 图表或者 canvas 图表进行平移/缩放操作
 
 # 项目组织结构
 

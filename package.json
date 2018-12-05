@@ -1,0 +1,18 @@
+{
+  "name": "d3-in-depth",
+  "version": "0.0.1",
+  "description": "对D3部分源码进行注解",
+  "keywords": [
+    "dom",
+    "visualization",
+    "svg",
+    "animation",
+    "canvas",
+    "annotations"
+  ],
+  "homepage": "https://d3js.org",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/d3/d3.git"
+  }
+}
