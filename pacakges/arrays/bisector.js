@@ -6,7 +6,7 @@ import ascending from "./ascending";
  * @param {*} compare 比较器函数
  */
 export default function(compare) {
-  // 当compare比较器函数只接受一个参数，则扩展为接收两个参数的升序排序器
+  // 当compare比较器函数只接受一个参数，则扩展为接收两个参数的比较器
   if (compare.length === 1) {
     compare = ascendingComparator(compare);
   }
@@ -38,7 +38,7 @@ export default function(compare) {
   };
 }
 
-//注意这个函数中，对排序访问器第一个参数进行了额外的函数处理
+//注意这个函数中，对比较访问器第一个参数进行了额外的函数处理
 //而这个额外的函数f就是只接收一个参数的访问器函数
 function ascendingComparator(f) {
   return function(d, x) {
