@@ -1,6 +1,7 @@
 /**
- *
- * @param {*} node 继承自HTMLNode的DOM节点对象
+ * 注意HTML和SVG这两套技术规范中其顶层元素为Element，即document中所有元素都继承自该元素
+ * 在HTML结构中的元素来自HTMLElement；而在SVG结构中的元素来自SVGElement
+ * @param {*} node 继承自SVGElement的DOM节点对象
  * @param {*} event
  */
 export default function(node, event) {

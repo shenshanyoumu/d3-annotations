@@ -29,6 +29,7 @@ export default function(select) {
         (node = group[i]) &&
         (subnode = select.call(node, node.__data__, i, group))
       ) {
+        // 这是数据集绑定时存储在DOM节点的__data__属性的数据
         if ("__data__" in node) subnode.__data__ = node.__data__;
         subgroup[i] = subnode;
       }
