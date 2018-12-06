@@ -3,6 +3,7 @@ var t0 = new Date(),
 
 // 时间区间生成函数。参数floori函数用于计算给定时间的精度下限；而offseti函数用于对时间数值进行偏斜处理
 export default function newInterval(floori, offseti, count, field) {
+  // 调用interval(date)等价于调用floori(date)
   function interval(date) {
     return floori((date = new Date(+date))), date;
   }
