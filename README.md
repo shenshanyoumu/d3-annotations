@@ -24,7 +24,7 @@
 # D3 主要模块简介
 
 &ensp;&ensp;D3 代码库基于 lerna 工具生成多包单体仓库，而每个模块的打包采用 rollup 打包器，其主要模块包括  
-（1）Arrays  
+（1）Arrays(难度系数:3.5,重要性系数:4.5)  
 &ensp;&ensp;D3 中所有数据源都是数组形式，定义了一系列数组的运算函数
 
 （2）Axis  
@@ -39,7 +39,7 @@
 （5）collections  
 &ensp;&ensp;D3 中除了数组形式的数据结构，还有一类具有 keys 值的层次结构对象，比如 Maps、Sets、Nests 等。针对这些基本的数据结构实现了整套的功能
 
-（6）Colors  
+（6）Colors(难度系数:3.5,重要性系数:3)  
 &ensp;&ensp;颜色系统非常丰富，事实上颜色的显示和转换等具备庞杂的知识体系。D3 专门有几个模块用于处理颜色相关内容，包括颜色格式、颜色的计算等
 
 （7）Color Schemes  
@@ -48,7 +48,7 @@
 （8）Contours-等高线  
 &ensp;&ensp;在地图可视化中计算等高多边形是基本要求
 
-（9）dispatch  
+（9）dispatch(难度系数:3,重要性系数:3)  
 &ensp;&ensp;D3 实现了一套事件发布/订阅机制，用于分离事件和回调函数的耦合
 
 （10）Dragging  
@@ -60,13 +60,13 @@
 （12）Easings  
 &ensp;&ensp;虽然 D3 的动画都是基于 HTML+CSS+JS，但是动画的具体形式需要 D3 来实现，这就是该模块的意义
 
-（13）Fetch  
+（13）Fetch(难度系数:3,重要性系数:3)  
 &ensp;&ensp;D3 的数据源大部分来自网络，因此定义 Fetch 模块实现网络请求
 
 （14）Forces  
 &ensp;&ensp;基于速度的 Verlet 积分实现的力导向图，这种布局算法在模拟具有强度信息的关系网很有效
 
-（15）Number Formats  
+（15）Number Formats(难度系数:4.5,重要性系数:3)  
 &ensp;&ensp;对一些数据格式进行转换，以方便人类理解
 
 （16）Geographies  
@@ -75,31 +75,31 @@
 （17）Hierarchies  
 &ensp;&ensp;对具有层次结构图表的一种布局算法，现实中 Tree 图、TreeMap、Packing 图等都可以使用这种布局变种
 
-（18）Interpolators  
+（18）Interpolators(难度系数:4.5,重要性系数:4)  
 &ensp;&ensp;插值器用于对数组、颜色、字符串、数组、对象等任何具有离散的结构进行差值
 
-（19）Paths  
+（19）Paths(难度系数:2,重要性系数:4.5)  
 &ensp;&ensp;D3 的 Paths 模块定义的 API 与 SVG 的 API 几乎一一对应，方便开发者使用 JS 来实现之前 SVG 上复杂的路径渲染
 
-（20）Polygons  
+（20）Polygons(难度系数:3,重要性系数:4.5)  
 &ensp;&ensp;对于二维多边形的各种几何运算，包括求面积、周长和计算凸包等
 
 （21）Quadtrees  
 &ensp;&ensp;对二维几何空间进行递归划分的模块
 
-（22）Random Numbers  
+（22）Random Numbers(难度系数:3.5,重要性系数:3)  
 &ensp;&ensp;生成符合特定数学分布的随机数数组
 
 （23）Scales  
 &ensp;&ensp;比例尺的作用就是将抽象的数据映射为人类可以理解的图表的关键工具。比例尺分为线性、非线性、序列、发散比例尺、量化比例尺等
 
-（24）Selections  
+（24）Selections(难度系数:4,重要性系数:4.5)  
 &ensp;&ensp;这是 D3 用于绑定 DOM 结构和数据集的工具模块，D3 的数据驱动思想就是通过 Selection 实现，选择器根据数据绑定 DOM，并可对 DOM 节点进行属性修改和事件处理
 
 （25）Shapes  
 &ensp;&ensp;该模块定义了一系列基础图元，包含弧线、曲线、饼图、封闭图、线段、基于贝塞尔曲线实现的 Links 线、Symbols、堆栈图等
 
-（26）Time Format  
+（26）Time Format(难度系数:4,重要性系数:3.5)  
 &ensp;&ensp;受到 C 语言 strptime 和 strftime 函数的启发，实现的时间格式模块
 
 （27）Time Intervals  
