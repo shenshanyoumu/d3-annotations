@@ -1,4 +1,4 @@
-// todo：无法理解
+// 一种基于样条曲线的基础插值器
 export function basis(t1, v0, v1, v2, v3) {
   var t2 = t1 * t1,
     t3 = t2 * t1;

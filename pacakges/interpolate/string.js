@@ -15,7 +15,9 @@ function one(b) {
   };
 }
 
-// todo：不理解
+// 对于给定的字符串a/b，找到对应位置的数值进行插值
+// 比如 a = '300 12px sans-serif',b ='500 36px Comic-Sans'
+// 而插值器如果是一个线性插值器，且参数t为0.5。则输出结果为“400 24px Comic-Sans“
 export default function(a, b) {
   var bi = (reA.lastIndex = reB.lastIndex = 0), // scan index for next number in b
     am, // current match in a
