@@ -12,6 +12,8 @@ export default function() {
     root.x0 = root.y0 = padding;
     root.x1 = dx;
     root.y1 = dy / n;
+
+    //
     root.eachBefore(positionNode(dy, n));
     if (round) root.eachBefore(roundNode);
     return root;
