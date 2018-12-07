@@ -95,6 +95,7 @@ export function timerFlush() {
   --frame;
 }
 
+// 唤醒任务队列执行
 function wake() {
   clockNow = (clockLast = clock.now()) + clockSkew;
   frame = timeout = 0;
