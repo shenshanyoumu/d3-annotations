@@ -54,7 +54,7 @@
 （10）Dragging(难度系数:3.5,重要性系数:4.5)  
 &ensp;&ensp;在 SVG、HTML 和 Canvas 上实现拖拽行为
 
-（11）Delimiter-Separated Values  
+（11）Delimiter-Separated Values(难度系数:3.5,重要性系数:3.5)  
 &ensp;&ensp;对外部包含分隔符的文件进行处理，得到图表所需的数据源
 
 （12）Easings(难度系数:3.5,重要性系数:4)  
@@ -63,7 +63,7 @@
 （13）Fetch(难度系数:3,重要性系数:3)  
 &ensp;&ensp;D3 的数据源大部分来自网络，因此定义 Fetch 模块实现网络请求
 
-（14）Forces  
+（14）Forces(难度系数:4,重要性系数:4)  
 &ensp;&ensp;基于速度的 Verlet 积分实现的力导向图，这种布局算法在模拟具有强度信息的关系网很有效
 
 （15）Number Formats(难度系数:4.5,重要性系数:3)  
@@ -72,7 +72,7 @@
 （16）Geographies  
 &ensp;&ensp;有关地图投影、地图形态和相关数学运算的模块。大量涉及球面、曲面运算
 
-（17）Hierarchies  
+（17）Hierarchies(难度系数:4,重要性系数:4.5)  
 &ensp;&ensp;对具有层次结构图表的一种布局算法，现实中 Tree 图、TreeMap、Packing 图等都可以使用这种布局变种
 
 （18）Interpolators(难度系数:4.5,重要性系数:4)  
@@ -90,7 +90,7 @@
 （22）Random Numbers(难度系数:3.5,重要性系数:3)  
 &ensp;&ensp;生成符合特定数学分布的随机数数组
 
-（23）Scales  
+（23）Scales(难度系数:4.5,重要性系数:4.5)  
 &ensp;&ensp;比例尺的作用就是将抽象的数据映射为人类可以理解的图表的关键工具。比例尺分为线性、非线性、序列、发散比例尺、量化比例尺等
 
 （24）Selections(难度系数:4,重要性系数:4.5)  
@@ -102,7 +102,7 @@
 （26）Time Format(难度系数:4,重要性系数:3.5)  
 &ensp;&ensp;受到 C 语言 strptime 和 strftime 函数的启发，实现的时间格式模块
 
-（27）Time Intervals  
+（27）Time Intervals(难度系数:4,重要性系数:3.5)  
 &ensp;&ensp;将独立的时刻转化为人类能感知的时间变化，包括时分秒和星期年月等
 
 （28）Timers(难度系数:3.5,重要性系数:4.5)  
