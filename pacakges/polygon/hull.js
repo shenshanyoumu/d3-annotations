@@ -4,6 +4,10 @@ function lexicographicOrder(a, b) {
   return a[0] - b[0] || a[1] - b[1];
 }
 
+// 在计算机几何中，计算点集合的凸包算法非常多。Andrew Monotone chain 凸包生成算法构建二维凸包的时间复杂度为 O(nlogn)。算法步骤
+// （1）对点集合进行词法排序，即先对X坐标排序，对于同等X坐标的点再进行Y坐标排序
+// （2）然后在时间复杂度为O(n)内构建点集合的upper凸包和lower凸包。
+
 // 迭代计算图形X轴上部最外围顶点集，主要思路是根据向量的叉积大小来迭代
 function computeUpperHullIndexes(points) {
   var n = points.length,

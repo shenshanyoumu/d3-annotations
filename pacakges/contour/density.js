@@ -16,6 +16,9 @@ function defaultWeight() {
   return 1;
 }
 
+/**
+ * 根据默认配置构建一个新的轮廓密度评估生成器
+ */
 export default function() {
   var x = defaultX,
     y = defaultY,
@@ -29,6 +32,10 @@ export default function() {
     m = (dy + o * 2) >> k, // grid height
     threshold = constant(20);
 
+  /**
+   * 返回GeoJSON MultiPolygon几何对象数组，每个几何对象表示一个轮廓区域，用于指示区域内单位面积的点密度
+   * @param {*} data
+   */
   function density(data) {
     var values0 = new Float32Array(n * m),
       values1 = new Float32Array(n * m);

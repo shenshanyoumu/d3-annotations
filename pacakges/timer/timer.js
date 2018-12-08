@@ -19,7 +19,7 @@ var frame = 0, // is an animation frame pending?
           setTimeout(f, 17);
         };
 
-//尽量基于Window的performance.now函数得到精确的当前时间
+//尽量基于Window的performance.now函数得到精确的当前时间；如果浏览器不支持performance，则使用JS原生的Date对象
 export function now() {
   return clockNow || (setFrame(clearNow), (clockNow = clock.now() + clockSkew));
 }
@@ -73,6 +73,12 @@ Timer.prototype = timer.prototype = {
   }
 };
 
+/**
+ * 启动计时器实例
+ * @param {*} callback 回调函数
+ * @param {*} delay 调用周期
+ * @param {*} time 以给定时刻为基准开始计时，默认为now
+ */
 export function timer(callback, delay, time) {
   var t = new Timer();
   t.restart(callback, delay, time);

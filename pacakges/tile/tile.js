@@ -13,6 +13,9 @@ export default function() {
     zoomDelta = 0, //缩放增量
     wrap = true; //表示瓦片图在DOM容器平铺，可能出现周期性显示行为
 
+  /**
+   * 瓦片生成器，用于决定哪些四叉树瓦片数据可被展示在矩形视口区域
+   */
   function tile() {
     // 瓦片图在每次缩放时，其图片尺寸比例变换
     // Math.log表示自然对数
@@ -58,6 +61,7 @@ export default function() {
       : [x1 - x0, y1 - y0];
   };
 
+  // 当前瓦片表示的地理区域范围
   tile.extent = function(_) {
     return arguments.length
       ? ((x0 = +_[0][0]),
@@ -68,6 +72,7 @@ export default function() {
       : [[x0, y0], [x1, y1]];
   };
 
+  // 当前瓦片的层级，瓦片进行缩放时scale发生变化
   tile.scale = function(_) {
     return arguments.length ? ((scale = +_), tile) : scale;
   };
@@ -80,11 +85,12 @@ export default function() {
     return arguments.length ? ((zoomDelta = +_), tile) : zoomDelta;
   };
 
-  // 如果设置了wrap参数，则瓦片会周期性展开，类似地图在X轴向的周期性布局
+  // 如果设置了wrap参数，则瓦片会周期性展开，类似地图的循环滚动效果
   tile.wrap = function(_) {
     return arguments.length ? ((wrap = _), tile) : wrap;
   };
 
+  // 如果参数tileSize被定义，设置当前瓦片布局的独立瓦片宽高尺寸，然后返回当前瓦片布局；而默认瓦片尺寸为256像素。
   tile.tileSize = function(_) {
     return arguments.length ? ((tileSize = _), tile) : tileSize;
   };

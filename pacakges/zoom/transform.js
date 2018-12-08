@@ -1,3 +1,9 @@
+/**
+ *
+ * @param {*} k 缩放因子，用于控制比例尺变化
+ * @param {*} x
+ * @param {*} y
+ */
 export function Transform(k, x, y) {
   this.k = k;
   this.x = x;
@@ -33,12 +39,15 @@ Transform.prototype = {
   invert: function(location) {
     return [(location[0] - this.x) / this.k, (location[1] - this.y) / this.k];
   },
+
   invertX: function(x) {
     return (x - this.x) / this.k;
   },
   invertY: function(y) {
     return (y - this.y) / this.k;
   },
+
+  // 在缩放过程中，重新计算值域
   rescaleX: function(x) {
     return x.copy().domain(
       x
