@@ -65,17 +65,20 @@ Map.prototype = map.prototype = {
 function map(object, f) {
   var map = new Map();
 
-  if (object instanceof Map)
+  // 如果参数object本身为Map实例，则进行复制处理
+  if (object instanceof Map) {
     object.each(function(value, key) {
       map.set(key, value);
     });
-  else if (Array.isArray(object)) {
+  } else if (Array.isArray(object)) {
     var i = -1,
       n = object.length,
       o;
 
     if (f == null) {
-      while (++i < n) map.set(i, object[i]);
+      while (++i < n) {
+        map.set(i, object[i]);
+      }
     } else {
       while (++i < n) {
         map.set(f((o = object[i]), i, object), o);
@@ -83,7 +86,9 @@ function map(object, f) {
     }
   } else {
     if (object) {
-      for (var key in object) map.set(key, object[key]);
+      for (var key in object) {
+        map.set(key, object[key]);
+      }
     }
   }
 
