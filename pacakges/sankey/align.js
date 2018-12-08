@@ -25,12 +25,17 @@ export function right(node, n) {
 }
 
 // 如果当前节点具有向后续节点发从的Links，则表示该节点为整个桑基图的非叶子节点
-// 计算当前节点的深度值，即从最左边开始到当前节点的层数；如果当前节点为叶子节点，则返回最右一层
+// 计算当前节点的深度值，即从最左边开始到当前节点的层数；
+/**
+ *
+ * @param {*} node 表示图节点
+ * @param {*} n 节点最大深度
+ */
 export function justify(node, n) {
   return node.sourceLinks.length ? node.depth : n - 1;
 }
 
-//节点
+//桑基图中计算两端的节点位置
 export function center(node) {
   return node.targetLinks.length
     ? node.depth

@@ -52,12 +52,12 @@ function defaultId(d) {
   return d.index;
 }
 
-// 节点生成器
+// 节点访问器
 function defaultNodes(graph) {
   return graph.nodes;
 }
 
-// 连线生成器
+// 连线访问器
 function defaultLinks(graph) {
   return graph.links;
 }
@@ -95,10 +95,19 @@ export default function() {
       nodes: nodes.apply(null, arguments),
       links: links.apply(null, arguments)
     };
+
+    // 先计算图中Node与Link的双向连接关系
     computeNodeLinks(graph);
+
+    // 计算每个节点的value
     computeNodeValues(graph);
+
+    // 计算图中每个Node的深度/高度信息。所谓深度/高度相对于桑基图的最终展示形式而言，一般只取其一
     computeNodeDepths(graph);
+
+    // 迭代调整，图中所有节点在水平方向的位置，以及垂直方向的位置
     computeNodeBreadths(graph, iterations);
+
     computeLinkBreadths(graph);
     return graph;
   }
@@ -166,33 +175,44 @@ export default function() {
   };
 
   /**
-   *
+   * 返回Node/Link双向连接信息
    * @param {*} graph 包含Nodes和Links的图结构
    */
   function computeNodeLinks(graph) {
+    // 最开始Nodes信息只有基本的连接关系，其他信息都需要计算得到
     graph.nodes.forEach(function(node, i) {
       node.index = i;
-      node.sourceLinks = [];
-      node.targetLinks = [];
+      node.sourceLinks = []; //从该节点发出的Links集合
+      node.targetLinks = []; //汇聚到该节点的Links集合
     });
+
     // 注意map结构在d3-collection的实现
     var nodeById = map(graph.nodes, id);
+
     graph.links.forEach(function(link, i) {
       link.index = i;
       var source = link.source,
         target = link.target;
-      if (typeof source !== "object")
+
+      // 有时候为了节省网络传输，在生成桑基图时传递的Links数组中每个Link的source/target
+      // 可能是一个字符串，通过该字符串在Nodes集合找到对应的节点
+      if (typeof source !== "object") {
         source = link.source = find(nodeById, source);
-      if (typeof target !== "object")
+      }
+
+      if (typeof target !== "object") {
         target = link.target = find(nodeById, target);
+      }
+
       source.sourceLinks.push(link);
       target.targetLinks.push(link);
     });
   }
 
-  // Compute the value (size) of each node by summing the associated links.
+  // 根据节点的sourceLinks/targetLinks的流量值得到节点的值
   function computeNodeValues(graph) {
     graph.nodes.forEach(function(node) {
+      // 在最初的传递给graph的links参数中，每个links具有value信息。当然如果没有value信息则设置默认值0
       node.value = Math.max(
         sum(node.sourceLinks, value),
         sum(node.targetLinks, value)
@@ -200,13 +220,17 @@ export default function() {
     });
   }
 
-  // Iteratively assign the depth (x-position) for each node.
-  // Nodes are assigned the maximum depth of incoming neighbors plus one;
-  // nodes with no incoming links are assigned depth zero, while
-  // nodes with no outgoing links are assigned the maximum depth.
+  //  迭代计算图中所有节点的深度
   function computeNodeDepths(graph) {
     var nodes, next, x;
 
+    // 计算Node深度的算法块，该算法的运行过程如下
+    // （1）初始化Nodes为graph中所有Nodes组成的集合
+    // （2）第一轮遍历，所有Node的深度为0，并且将所有Link的target节点存储在next数组。显然桑基图最左边的节点将不会出现在next数组
+    // （3）第二轮遍历next数组，其中所有Node节点深度为1，并且该数组中每个node的sourceLinks一定有对应的target，将target节点存储在下一轮next数组
+    // 。。。
+    // 多轮迭代，直到最后一些节点再也没有sourceLinks，表示这些节点为桑基图最右边节点
+    // 从而得到每个节点的深度
     for (
       nodes = graph.nodes, next = [], x = 0;
       nodes.length;
@@ -222,6 +246,7 @@ export default function() {
       });
     }
 
+    // 当桑基图垂直布局，则需要计算每个节点的高度，方法与上面计算深度类似
     for (
       nodes = graph.nodes, next = [], x = 0;
       nodes.length;
@@ -237,7 +262,10 @@ export default function() {
       });
     }
 
+    // 生成器的图表空间与节点深度最大值相比，得到一个用于真实绘制的比例系数
     var kx = (x1 - x0 - dx) / (x - 1);
+
+    // 计算图中所有节点在当前[0,1]空间的点位置
     graph.nodes.forEach(function(node) {
       node.x1 =
         (node.x0 =
@@ -247,7 +275,10 @@ export default function() {
     });
   }
 
+  // 计算图中每个节点在垂直方向上的上下沿坐标；当然对于垂直布局的桑基图，则计算水平方向上的前后两个坐标
   function computeNodeBreadths(graph) {
+    // 定义的嵌套生成器，基于图中nodes的x0坐标的升序排序，并且对于相同x0的点作为一个group存储
+
     var columns = nest()
       .key(function(d) {
         return d.x0;
@@ -258,9 +289,13 @@ export default function() {
         return d.values;
       });
 
-    //
+    //计算图中节点在垂直方向上的上下沿坐标y0/y1
     initializeNodeBreadth();
+
+    // 解决垂直方向上两个node的重叠问题
     resolveCollisions();
+
+    // alpha控制每次调整的幅度，从大幅度的水平移动节点到最后微调
     for (var alpha = 1, n = iterations; n > 0; --n) {
       relaxRightToLeft((alpha *= 0.99));
       resolveCollisions();
@@ -268,22 +303,29 @@ export default function() {
       resolveCollisions();
     }
 
+    // 计算所有节点在垂直区域的y0/y1坐标
     function initializeNodeBreadth() {
+      // 注意下面nodes.length表示具有相同x0的一组节点的数量；
+      // 而sum(nodes,value)主要的意义在于每个Node在垂直方向上尺寸需要由之前value来决定，而value也决定Link的绘制宽度
       var ky = min(columns, function(nodes) {
         return (y1 - y0 - (nodes.length - 1) * py) / sum(nodes, value);
       });
 
+      // columns中每个元素是一个数组，而数组中所有节点具有相同的x0，即相同深度
+      // 根据上面的ky比例，计算同一列中每个节点的上下沿坐标y0/y1
       columns.forEach(function(nodes) {
         nodes.forEach(function(node, i) {
           node.y1 = (node.y0 = i) + node.value * ky;
         });
       });
 
+      // 同理，每个Link的绘制宽度也由Link的value决定，ky只是关于value与绘制空间的比例
       graph.links.forEach(function(link) {
         link.width = link.value * ky;
       });
     }
 
+    // 桑基图中最左边节点开始
     function relaxLeftToRight(alpha) {
       columns.forEach(function(nodes) {
         nodes.forEach(function(node) {
@@ -299,6 +341,7 @@ export default function() {
       });
     }
 
+    // columns元素反转，即从桑基图最右边一列节点开始计算
     function relaxRightToLeft(alpha) {
       columns
         .slice()
@@ -317,8 +360,7 @@ export default function() {
         });
     }
 
-    // 桑基图中水平方向的布局由节点深度信息决定，而垂直方向的布局由具有相同深度的节点数目构成
-    // columns数组的每个元素就是有一组具有相同深度的节点构成的集合
+    // 之前的运算并没有考虑Node在垂直方向上的padding，因此加上padding后就需要迭代调整坐标
     function resolveCollisions() {
       columns.forEach(function(nodes) {
         var node,
@@ -328,12 +370,16 @@ export default function() {
           i;
 
         // Push any overlapping nodes down.
-        //
+        // 在同一列中，根据节点矩形的高度尺寸升序
         nodes.sort(ascendingBreadth);
+
+        // 对每个节点在垂直方向上增加padding
         for (i = 0; i < n; ++i) {
           node = nodes[i];
           dy = y - node.y0;
-          if (dy > 0) (node.y0 += dy), (node.y1 += dy);
+          if (dy > 0) {
+            (node.y0 += dy), (node.y1 += dy);
+          }
           y = node.y1 + py;
         }
 
@@ -342,7 +388,7 @@ export default function() {
         if (dy > 0) {
           (y = node.y0 -= dy), (node.y1 -= dy);
 
-          // Push any overlapping nodes back up.
+          // 对于发生重叠的节点，向上移动解决重叠
           for (i = n - 2; i >= 0; --i) {
             node = nodes[i];
             dy = node.y1 + py - y;
@@ -354,7 +400,9 @@ export default function() {
     }
   }
 
+  // 计算Link的绘制宽度
   function computeLinkBreadths(graph) {
+    // 对图中每个节点的sourceLinks/targetLinks分布升序
     graph.nodes.forEach(function(node) {
       node.sourceLinks.sort(ascendingTargetBreadth);
       node.targetLinks.sort(ascendingSourceBreadth);
