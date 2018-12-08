@@ -1,6 +1,9 @@
 import { epsilon } from "../math";
 import { Cardinal } from "./cardinal";
 
+//catmullRom样条生成器
+// 在计算机图形学领域中，centripetal Catmull-Rom样条是Catmull-Rom样条的变种，属于典型的插值样条类型。
+
 export function point(that, x, y) {
   var x1 = that._x1,
     y1 = that._y1,

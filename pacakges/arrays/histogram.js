@@ -7,8 +7,7 @@ import range from "./range";
 import { tickStep } from "./ticks";
 import sturges from "./threshold/sturges";
 
-// 这是D3图表实现中常用的模式，即layout布局器
-// 布局器的作用就是将原始数据转换为目前图表需要的数据结构
+// 直方图生成器是整个数组运算的集成实例，实现过程中几乎用到了D3-array模块的所有函数
 export default function() {
   var value = identity,
     domain = extent,

@@ -218,7 +218,7 @@ function axis(orient, scale) {
     return arguments.length ? ((tickFormat = _), axis) : tickFormat;
   };
 
-  //
+  //刻度线长度设置
   axis.tickSize = function(_) {
     return arguments.length
       ? ((tickSizeInner = tickSizeOuter = +_), axis)

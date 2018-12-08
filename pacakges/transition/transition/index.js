@@ -1,4 +1,4 @@
-import {selection} from "d3-selection";
+import { selection } from "d3-selection";
 import transition_attr from "./attr";
 import transition_attrTween from "./attrTween";
 import transition_delay from "./delay";
@@ -19,6 +19,13 @@ import transition_tween from "./tween";
 
 var id = 0;
 
+/**
+ *
+ * @param {*} group
+ * @param {*} parents
+ * @param {*} name 渐变动画名称
+ * @param {*} id 一次渐变执行的ID编号，因为同样的渐变实例可能在多处被执行
+ */
 export function Transition(groups, parents, name, id) {
   this._groups = groups;
   this._parents = parents;

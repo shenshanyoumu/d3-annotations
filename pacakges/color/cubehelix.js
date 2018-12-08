@@ -11,7 +11,8 @@ var A = -0.14861,
   EB = E * B,
   BC_DA = B * C - D * A;
 
-// 通过RGB颜色空间可以得到cubeHelix颜色表
+// 通过RGB颜色空间可以得到cubeHelix颜色表,用于提供一种优雅降级到灰度空间而不损失信息的颜色映射方式。
+// 这非常实用科学可视化领域的连续颜色空间提供高质量的颜色变换
 function cubehelixConvert(o) {
   if (o instanceof Cubehelix) return new Cubehelix(o.h, o.s, o.l, o.opacity);
   if (!(o instanceof Rgb)) o = rgbConvert(o);

@@ -129,7 +129,7 @@ function empty(extent) {
   return extent[0][0] === extent[1][0] || extent[0][1] === extent[1][1];
 }
 
-// 刷子动作后得到选择集
+// 刷子刷动后得到选择集，并且刷动选择集就保存在当前DOM节点下
 export function brushSelection(node) {
   var state = node.__brush;
   return state ? state.dim.output(state.selection) : null;
@@ -156,12 +156,17 @@ function brush(dim) {
     handleSize = 6,
     touchending;
 
+  /**
+   *
+   * @param {*} group 必须是SVG的g元素选择集
+   */
   function brush(group) {
     var overlay = group
       .property("__brush", initialize)
       .selectAll(".overlay")
       .data([type("overlay")]);
 
+    // 刷子刷动过程中在图表上产生一层遮罩效果
     overlay
       .enter()
       .append("rect")
@@ -648,6 +653,7 @@ function brush(dim) {
     return state;
   }
 
+  // 刷子的刷动范围，这个范围是针对图表区域而已
   brush.extent = function(_) {
     return arguments.length
       ? ((extent =
@@ -668,6 +674,7 @@ function brush(dim) {
     return arguments.length ? ((handleSize = +_), brush) : handleSize;
   };
 
+  // 绑定刷动事件，并返回刷子对象
   brush.on = function() {
     var value = listeners.on.apply(listeners, arguments);
     return value === listeners ? brush : value;
