@@ -10,16 +10,39 @@
 
 &ensp;&ensp;D3 的实现深刻理解了 Grammar of Graphics 的精髓，即错综复杂的各类图表可以抽象为一些基础组件和运算过程，而 D3 就是实现了这些基础组件和运算过程，为开发者提供了最大的灵活性和自由度。
 
-# D3 核心概念
+# D3 特性
 
-（1）选择器  
-&ensp;&ensp;D3 封装了一组选择器函数，用于绑定数据和 DOM 节点。  
-（2）动态属性  
-&ensp;&ensp;D3 被称为数据领域的 jQuery；D3 底层基于 SVG 渲染，而上层 API 与底层 SVG 的 API 进行了映射。并且对于 DOM 节点的属性设置支持动态绑定  
-（3）Enter/Exit  
-&ensp;&ensp;D3 需要开发者手动对数据集和 DOM 节点集进行 Enter/Exit 处理，来动态增加和删除 DOM 节点。  
-（4）transformation & transition  
-&ensp;&ensp;D3 完全基于 HTML+CSS+JS+SVG，因此完全基于前端开发的动画/渐变实现。为了方便开发者，D3 的动画/渐变本质上就是对底层的前端动画/渐变的封装
+（1）数据结构转换与绘制分离  
+&ensp;&ensp;数据结构转换即 D3 中大量的 layout，其核心封装大量图表的数据转换算法
+
+（2）链式语言  
+&ensp;&ensp;D3 采用类似 jQuery 的链式方法调用，D3 被称为数据领域的 jQuery
+
+（3）D3 的大量函数用于操作 DOM  
+&ensp;&ensp;D3 可以使用 SVG、Canvas 元素来绘制图形/图表
+
+（4）数据绑定 DOM  
+&ensp;&ensp;D3 根据数据来动态创建/回收 DOM 节点
+
+（5）D3 的核心是数据处理  
+&ensp;&ensp;D3 本身没有绘图能力，它包含大量的数据转换算法。在真实绘图中使用 SVG/canvas 等元素来绘制数据
+
+（6）D3+VDOM = 高性能渲染  
+&ensp;&ensp;基于 React 这类 UI 库的 virtual DOM 思想，而 D3 只负责数据转换，则可以实现 DOM 节点的高性能渲染。D3 本质是一套高级的计算框架库
+
+# D3 基础概念
+
+（1）选择集是 D3 最重要的基础  
+&ensp;&ensp;选择集用于从当前 DOM 树中选择复合要求的 DOM 节点集合，类似 jQuery 提供的节点选择能力。
+
+（2）数据更新三步走  
+&ensp;&ensp;update 原有 DOM 节点上的数据、enter 新的 DOM 节点并绑定数据，exit 没有数据绑定关系的 DOM 节点
+
+（3）渐变动画  
+&ensp;&ensp;D3 提供一组过渡/渐变函数，可以控制 DOM 节点发生改变时的动效
+
+（4）事件机制  
+&ensp;&ensp;D3 的事件机制最终绑定到对应的 DOM 节点，并负责处理事件的传播
 
 # D3 主要模块简介
 
