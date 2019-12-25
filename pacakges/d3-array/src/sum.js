@@ -1,3 +1,8 @@
+/**
+ * 数组元素求和运算，注意valueof用于将数组中非数值元素映射到数值空间
+ * @param {*} values 
+ * @param {*} valueof 
+ */
 export default function(values, valueof) {
   var n = values.length,
       i = -1,
