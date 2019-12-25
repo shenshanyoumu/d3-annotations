@@ -1,7 +1,7 @@
 {
   "name": "d3-in-depth",
   "version": "0.0.1",
-  "description": "对D3部分源码进行注解",
+  "description": "D3源码分析",
   "keywords": [
     "dom",
     "visualization",
