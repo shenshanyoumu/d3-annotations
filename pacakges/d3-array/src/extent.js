@@ -1,3 +1,8 @@
+/**
+ * 根据给定的数组，计算该数组表示的范围
+ * @param {*} values 
+ * @param {*} valueof 
+ */
 export default function(values, valueof) {
   var n = values.length,
       i = -1,

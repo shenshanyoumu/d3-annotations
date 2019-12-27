@@ -1,5 +1,11 @@
 import {pair} from "./pairs";
 
+/**
+ * 计算两个数组的笛卡尔积
+ * @param {*} values0 
+ * @param {*} values1 
+ * @param {*} reduce 
+ */
 export default function(values0, values1, reduce) {
   var n0 = values0.length,
       n1 = values1.length,

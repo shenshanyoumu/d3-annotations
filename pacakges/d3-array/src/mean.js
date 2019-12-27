@@ -1,5 +1,10 @@
 import number from "./number";
 
+/**
+ * 计算数组均值
+ * @param {*} values 
+ * @param {*} valueof 
+ */
 export default function(values, valueof) {
   var n = values.length,
       m = n,
