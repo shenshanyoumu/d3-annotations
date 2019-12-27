@@ -1,14 +1,17 @@
 import define, {extend} from "./define.js";
 
+/**
+ * 默认继承自Object对象
+ */
 export function Color() {}
 
 export var darker = 0.7;
 export var brighter = 1 / darker;
 
-var reI = "\\s*([+-]?\\d+)\\s*",
-    reN = "\\s*([+-]?\\d*\\.?\\d+(?:[eE][+-]?\\d+)?)\\s*",
-    reP = "\\s*([+-]?\\d*\\.?\\d+(?:[eE][+-]?\\d+)?)%\\s*",
-    reHex = /^#([0-9a-f]{3,8})$/,
+var reI = "\\s*([+-]?\\d+)\\s*", // 数字串正则
+    reN = "\\s*([+-]?\\d*\\.?\\d+(?:[eE][+-]?\\d+)?)\\s*", //浮点数字串正则
+    reP = "\\s*([+-]?\\d*\\.?\\d+(?:[eE][+-]?\\d+)?)%\\s*", //携带%符号的浮点数字符串正则
+    reHex = /^#([0-9a-f]{3,8})$/, //3-8位的十六进制数字串
     reRgbInteger = new RegExp("^rgb\\(" + [reI, reI, reI] + "\\)$"),
     reRgbPercent = new RegExp("^rgb\\(" + [reP, reP, reP] + "\\)$"),
     reRgbaInteger = new RegExp("^rgba\\(" + [reI, reI, reI, reN] + "\\)$"),
@@ -16,6 +19,7 @@ var reI = "\\s*([+-]?\\d+)\\s*",
     reHslPercent = new RegExp("^hsl\\(" + [reN, reP, reP] + "\\)$"),
     reHslaPercent = new RegExp("^hsla\\(" + [reN, reP, reP, reN] + "\\)$");
 
+  /** 具名颜色 */
 var named = {
   aliceblue: 0xf0f8ff,
   antiquewhite: 0xfaebd7,
@@ -193,6 +197,10 @@ function color_formatRgb() {
   return this.rgb().formatRgb();
 }
 
+/**
+ * 
+ * @param {*} format 适配各种颜色空间的格式化字符串
+ */
 export default function color(format) {
   var m, l;
   format = (format + "").trim().toLowerCase();
