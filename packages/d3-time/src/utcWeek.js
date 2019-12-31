@@ -12,6 +12,7 @@ function utcWeekday(i) {
   });
 }
 
+/** 在世界时下计算给定时间区间内的星期分布 */
 export var utcSunday = utcWeekday(0);
 export var utcMonday = utcWeekday(1);
 export var utcTuesday = utcWeekday(2);

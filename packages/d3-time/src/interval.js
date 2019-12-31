@@ -3,28 +3,34 @@ var t0 = new Date,
 
 export default function newInterval(floori, offseti, count, field) {
 
+  /** 参数arguments表示interval函数的形参；如果没有传入参数则默认为当前时间 */
   function interval(date) {
     return floori(date = arguments.length === 0 ? new Date : new Date(+date)), date;
   }
 
+  /** 注意下面的编程方式故意修改了形参，这是因为date参数为引用传递 */
   interval.floor = function(date) {
     return floori(date = new Date(+date)), date;
   };
 
+  /** ceil计算方式等于floor+1，然后再进行floor。 */
   interval.ceil = function(date) {
     return floori(date = new Date(date - 1)), offseti(date, 1), floori(date), date;
   };
 
+  /** 日期的四舍五入操作，比较给定参数date与其floor和ceil的距离 */
   interval.round = function(date) {
     var d0 = interval(date),
         d1 = interval.ceil(date);
     return date - d0 < d1 - date ? d0 : d1;
   };
 
+  /** 在当前date基础上进行step的偏移量处理 */
   interval.offset = function(date, step) {
     return offseti(date = new Date(+date), step == null ? 1 : Math.floor(step)), date;
   };
 
+  /** 针对时序的ticks生成器，注意step的向下取整逻辑 */
   interval.range = function(start, stop, step) {
     var range = [], previous;
     start = interval.ceil(start);
@@ -35,6 +41,7 @@ export default function newInterval(floori, offseti, count, field) {
     return range;
   };
 
+  /** interval对象的filter函数，通过传递的测试函数来进行过滤处理 */
   interval.filter = function(test) {
     return newInterval(function(date) {
       if (date >= date) while (floori(date), !test(date)) date.setTime(date - 1);
@@ -49,6 +56,7 @@ export default function newInterval(floori, offseti, count, field) {
     });
   };
 
+  /** count参数为计数器函数 */
   if (count) {
     interval.count = function(start, end) {
       t0.setTime(+start), t1.setTime(+end);
