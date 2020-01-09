@@ -1,5 +1,6 @@
 import number from "./number.js";
 
+/** 具有代数意义的数字串正则表达式 */
 var reA = /[-+]?(?:\d+\.?\d*|\.?\d+)(?:[eE][-+]?\d+)?/g,
     reB = new RegExp(reA.source, "g");
 
