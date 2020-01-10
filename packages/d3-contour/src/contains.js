@@ -14,14 +14,28 @@ function ringContains(ring, point) {
   return contains;
 }
 
+/**
+ * 三点共线和
+ * @param {*} a 
+ * @param {*} b 
+ * @param {*} c 
+ */
 function segmentContains(a, b, c) {
+  /** 注意+(a[0]===b[0])可将布尔值转化为{0,1}二元取值 */
   var i; return collinear(a, b, c) && within(a[i = +(a[0] === b[0])], c[i], b[i]);
 }
 
+/**
+ * 三点共线判定，本质上计算(a,b)和(b,c)的斜率
+ * @param {*} a 
+ * @param {*} b 
+ * @param {*} c 
+ */
 function collinear(a, b, c) {
   return (b[0] - a[0]) * (c[1] - a[1]) === (c[0] - a[0]) * (b[1] - a[1]);
 }
 
+/** 判定点q在线段[p,r] 之间*/
 function within(p, q, r) {
   return p <= q && q <= r || r <= q && q <= p;
 }
