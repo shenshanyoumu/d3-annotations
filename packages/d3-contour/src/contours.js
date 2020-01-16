@@ -6,6 +6,8 @@ import constant from "./constant";
 import contains from "./contains";
 import noop from "./noop";
 
+/** thresholdSturge经验公式用于直方图分组 */
+
 var cases = [
   [],
   [[[1.0, 1.5], [0.5, 1.0]]],
