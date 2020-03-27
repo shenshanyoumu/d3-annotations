@@ -6,6 +6,7 @@ var ka = 0.89081309152928522810,
     ky = -Math.cos(tau / 10) * kr;
 
 export default {
+  /** 这些常用符号的绘制，可以先在纸面上作图找规律然后编程实现 */
   draw: function(context, size) {
     var r = Math.sqrt(size * ka),
         x = kx * r,
@@ -13,7 +14,7 @@ export default {
     context.moveTo(0, -r);
     context.lineTo(x, y);
     for (var i = 1; i < 5; ++i) {
-      var a = tau * i / 5,
+      var a = tau * i / 5, //正五角星的角度
           c = Math.cos(a),
           s = Math.sin(a);
       context.lineTo(s * r, -c * r);

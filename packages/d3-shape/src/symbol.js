@@ -19,13 +19,17 @@ export var symbols = [
 ];
 
 export default function() {
+  /** 默认为圆圈符号，开发者可选择其他基础符号 */
   var type = constant(circle),
       size = constant(64),
       context = null;
 
   function symbol() {
     var buffer;
+    /** 如果没有绘制画布，比如SVG或者canvas，则将上下文对象赋值为路径生成器对象 */
     if (!context) context = buffer = path();
+    
+    /** 将给定的符号对象“绘制”到context上，并返回具有相同引用的buffer对象 */
     type.apply(this, arguments).draw(context, +size.apply(this, arguments));
     if (buffer) return context = null, buffer + "" || null;
   }

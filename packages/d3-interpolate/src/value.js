@@ -7,6 +7,11 @@ import object from "./object.js";
 import string from "./string.js";
 import constant from "./constant.js";
 
+/**
+ * 根据参数a、b类型返回对应的插值函数
+ * @param {*} a 
+ * @param {*} b 
+ */
 export default function(a, b) {
   var t = typeof b, c;
   return b == null || t === "boolean" ? constant(b)

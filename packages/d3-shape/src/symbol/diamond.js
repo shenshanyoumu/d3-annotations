@@ -2,6 +2,7 @@ var tan30 = Math.sqrt(1 / 3),
     tan30_2 = tan30 * 2;
 
 export default {
+  /** 绘制菱形符号 */
   draw: function(context, size) {
     var y = Math.sqrt(size / tan30_2),
         x = y * tan30;

@@ -1,5 +1,6 @@
 var degrees = 180 / Math.PI;
 
+/** 类似群论中的幺元，针对矩阵的射影变换 */
 export var identity = {
   translateX: 0,
   translateY: 0,
@@ -9,12 +10,35 @@ export var identity = {
   scaleY: 1
 };
 
+/**
+ * 对图形的射影变换
+ * @param {*} a (a,b)表示图形的左下方点
+ * @param {*} b 
+ * @param {*} c (c,d)表示图形的右上方点
+ * @param {*} d 
+ * @param {*} e x轴平移距离
+ * @param {*} f y轴平移距离
+ */
 export default function(a, b, c, d, e, f) {
   var scaleX, scaleY, skewX;
-  if (scaleX = Math.sqrt(a * a + b * b)) a /= scaleX, b /= scaleX;
-  if (skewX = a * c + b * d) c -= a * skewX, d -= b * skewX;
-  if (scaleY = Math.sqrt(c * c + d * d)) c /= scaleY, d /= scaleY, skewX /= scaleY;
-  if (a * d < b * c) a = -a, b = -b, skewX = -skewX, scaleX = -scaleX;
+
+  /** 如果 */
+  if (scaleX = Math.sqrt(a * a + b * b)){
+    a /= scaleX, b /= scaleX;
+  }
+    
+  if (skewX = a * c + b * d){ 
+    c -= a * skewX, d -= b * skewX;
+  }
+
+  if (scaleY = Math.sqrt(c * c + d * d)) {
+    c /= scaleY, d /= scaleY, skewX /= scaleY;
+  }
+
+  if (a * d < b * c) {
+    a = -a, b = -b, skewX = -skewX, scaleX = -scaleX;
+  }
+
   return {
     translateX: e,
     translateY: f,

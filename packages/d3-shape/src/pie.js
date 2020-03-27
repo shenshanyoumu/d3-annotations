@@ -55,6 +55,7 @@ export default function() {
     return arguments.length ? (value = typeof _ === "function" ? _ : constant(+_), pie) : value;
   };
 
+  /** 饼图各部分绘制顺序 */
   pie.sortValues = function(_) {
     return arguments.length ? (sortValues = _, sort = null, pie) : sortValues;
   };
@@ -71,6 +72,7 @@ export default function() {
     return arguments.length ? (endAngle = typeof _ === "function" ? _ : constant(+_), pie) : endAngle;
   };
 
+  /** 饼图的各个业务子块间可能存在填充区域，这就是padAngle的作用 */
   pie.padAngle = function(_) {
     return arguments.length ? (padAngle = typeof _ === "function" ? _ : constant(+_), pie) : padAngle;
   };

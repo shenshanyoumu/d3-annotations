@@ -6,6 +6,7 @@ export var timeParse;
 export var utcFormat;
 export var utcParse;
 
+/** 默认为英语世界的时间格式化 */
 defaultLocale({
   dateTime: "%x, %X",
   date: "%-m/%-d/%Y",

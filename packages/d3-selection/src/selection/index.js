@@ -32,27 +32,34 @@ import selection_dispatch from "./dispatch";
 
 export var root = [null];
 
+/** 
+ * 第一个参数表示选择集分组，在实际应用中可以同时选择SVG节点下多个分组
+ */
 export function Selection(groups, parents) {
   this._groups = groups;
   this._parents = parents;
 }
 
+/** 构建的selection可以选择当前document所有DOM节点。 */
 function selection() {
   return new Selection([[document.documentElement]], root);
 }
 
+/** D3-Selection模块暴露的方法 */
 Selection.prototype = selection.prototype = {
   constructor: Selection,
   select: selection_select,
   selectAll: selection_selectAll,
   filter: selection_filter,
-  data: selection_data,
+  data: selection_data, //核心方法，用于绑定数据
   enter: selection_enter,
   exit: selection_exit,
   join: selection_join,
   merge: selection_merge,
   order: selection_order,
   sort: selection_sort,
+
+  // 绑定context，比如处理事件等
   call: selection_call,
   nodes: selection_nodes,
   node: selection_node,
@@ -71,9 +78,9 @@ Selection.prototype = selection.prototype = {
   insert: selection_insert,
   remove: selection_remove,
   clone: selection_clone,
-  datum: selection_datum,
+  datum: selection_datum, //核心方法
   on: selection_on,
-  dispatch: selection_dispatch
+  dispatch: selection_dispatch //在所选则的DOM集合上施加事件分发能力
 };
 
 export default selection;

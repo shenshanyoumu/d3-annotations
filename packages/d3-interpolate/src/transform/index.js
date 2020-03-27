@@ -1,6 +1,13 @@
 import number from "../number.js";
 import {parseCss, parseSvg} from "./parse.js";
 
+/**
+ * 
+ * @param {*} parse css解析器或者svg解析器
+ * @param {*} pxComma 只有css的transform属性值才会有"px px) deg)"这些单位
+ * @param {*} pxParen 
+ * @param {*} degParen 
+ */
 function interpolateTransform(parse, pxComma, pxParen, degParen) {
 
   function pop(s) {

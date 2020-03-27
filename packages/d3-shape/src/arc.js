@@ -2,14 +2,17 @@ import {path} from "d3-path";
 import constant from "./constant.js";
 import {abs, acos, asin, atan2, cos, epsilon, halfPi, max, min, pi, sin, sqrt, tau} from "./math.js";
 
+/** 扇形或者环状图形的内半径  */
 function arcInnerRadius(d) {
   return d.innerRadius;
 }
 
+/** 扇形或者环状图形的外半径 */
 function arcOuterRadius(d) {
   return d.outerRadius;
 }
 
+/** 弧形开始弧度，在笛卡尔坐标系上定义 */
 function arcStartAngle(d) {
   return d.startAngle;
 }
@@ -18,21 +21,36 @@ function arcEndAngle(d) {
   return d.endAngle;
 }
 
+/** 在一些扇形或环形中，两个邻接的弧形间存在没有具体业务意义的填充区 */
 function arcPadAngle(d) {
   return d && d.padAngle; // Note: optional!
 }
 
+/** 
+ * 计算线段A和B的相交性，即返回交点
+ * 线段A为[(x0,y0),(x1,y1)]
+ * 线段B为[(x2,y2),(x3,y3)]
+ */
 function intersect(x0, y0, x1, y1, x2, y2, x3, y3) {
   var x10 = x1 - x0, y10 = y1 - y0,
       x32 = x3 - x2, y32 = y3 - y2,
       t = y32 * x10 - x32 * y10;
+  /** 在精度范围内，认为两线段平行 */
   if (t * t < epsilon) return;
+
+  /** 计算两条线段的交点算法，如果采用传统的解析方式则比较复杂 */
   t = (x32 * (y0 - y2) - y32 * (x0 - x2)) / t;
   return [x0 + t * x10, y0 + t * y10];
 }
 
 // Compute perpendicular offset line of length rc.
 // http://mathworld.wolfram.com/Circle-LineIntersection.html
+/**
+ * 计算线段和弧形的垂直距离，用于判定相交性
+ * 线段通过[(x0,y0),(x1,y1)]表示
+ * 默认弧形的中心点在坐标原点。r1表示弧形外半径；rc表示弧形内半径
+ * @param {*} cw 表示弧形角度绘制方向，是逆时针还是顺时针
+ */
 function cornerTangents(x0, y0, x1, y1, r1, rc, cw) {
   var x01 = x0 - x1,
       y01 = y0 - y1,
@@ -48,7 +66,7 @@ function cornerTangents(x0, y0, x1, y1, r1, rc, cw) {
       dx = x10 - x11,
       dy = y10 - y11,
       d2 = dx * dx + dy * dy,
-      r = r1 - rc,
+      r = r1 - rc, //用弧形的外半径减去内半径
       D = x11 * y10 - x10 * y11,
       d = (dy < 0 ? -1 : 1) * sqrt(max(0, r * r * d2 - D * D)),
       cx0 = (D * dy - dx * d) / d2,
@@ -64,6 +82,7 @@ function cornerTangents(x0, y0, x1, y1, r1, rc, cw) {
   // TODO Is there a faster way to determine which intersection to use?
   if (dx0 * dx0 + dy0 * dy0 > dx1 * dx1 + dy1 * dy1) cx0 = cx1, cy0 = cy1;
 
+  /** 如果线段与弧形相交，则交点 */
   return {
     cx: cx0,
     cy: cy0,
@@ -77,7 +96,7 @@ function cornerTangents(x0, y0, x1, y1, r1, rc, cw) {
 export default function() {
   var innerRadius = arcInnerRadius,
       outerRadius = arcOuterRadius,
-      cornerRadius = constant(0),
+      cornerRadius = constant(0),//定义扇形中弧线与边的夹角弧度，用于美化图表
       padRadius = null,
       startAngle = arcStartAngle,
       endAngle = arcEndAngle,
@@ -92,27 +111,31 @@ export default function() {
         a0 = startAngle.apply(this, arguments) - halfPi,
         a1 = endAngle.apply(this, arguments) - halfPi,
         da = abs(a1 - a0),
-        cw = a1 > a0;
+        cw = a1 > a0; //判断是顺时针还是逆时针绘制
 
     if (!context) context = buffer = path();
 
-    // Ensure that the outer radius is always larger than the inner radius.
+    // 确保弧形外半径一定大于内半径
     if (r1 < r0) r = r1, r1 = r0, r0 = r;
 
-    // Is it a point?
+    //  如果弧形退化为一个点
     if (!(r1 > epsilon)) context.moveTo(0, 0);
 
-    // Or is it a circle or annulus?
+    //针对角度大于360的圆或者环形的绘制
     else if (da > tau - epsilon) {
       context.moveTo(r1 * cos(a0), r1 * sin(a0));
       context.arc(0, 0, r1, a0, a1, !cw);
+
+      /** 当存在内半径在，则绘制内弧线 */
       if (r0 > epsilon) {
         context.moveTo(r0 * cos(a1), r0 * sin(a1));
+
+        /** SVG绘图函数 */
         context.arc(0, 0, r0, a1, a0, cw);
       }
     }
 
-    // Or is it a circular or annular sector?
+    // 针对扇形和环状图形片段的绘制;
     else {
       var a01 = a0,
           a11 = a1,
@@ -128,7 +151,7 @@ export default function() {
           t0,
           t1;
 
-      // Apply padding? Note that since r1 ≥ r0, da1 ≥ da0.
+      // 针对两个扇形或弧形之间区域的绘制，用于美化图表
       if (rp > epsilon) {
         var p0 = asin(rp / r0 * sin(ap)),
             p1 = asin(rp / r1 * sin(ap));
@@ -143,7 +166,7 @@ export default function() {
           x10 = r0 * cos(a10),
           y10 = r0 * sin(a10);
 
-      // Apply rounded corners?
+      // 针对弧线与边的夹角存在弧度的绘制
       if (rc > epsilon) {
         var x11 = r1 * cos(a11),
             y11 = r1 * sin(a11),
@@ -164,7 +187,7 @@ export default function() {
         }
       }
 
-      // Is the sector collapsed to a line?
+      // 当弧形角度退化为0，则表示一条线段
       if (!(da1 > epsilon)) context.moveTo(x01, y01);
 
       // Does the sector’s outer ring have rounded corners?
@@ -219,12 +242,15 @@ export default function() {
     if (buffer) return context = null, buffer + "" || null;
   }
 
+  /** 计算弧形的质心 */
   arc.centroid = function() {
+    /** 弧形内外半径的中点；下面求中心弧度值公式中减π/2，其实感觉没啥意义？毕竟弧度是周期性单位 */
     var r = (+innerRadius.apply(this, arguments) + +outerRadius.apply(this, arguments)) / 2,
         a = (+startAngle.apply(this, arguments) + +endAngle.apply(this, arguments)) / 2 - pi / 2;
     return [cos(a) * r, sin(a) * r];
   };
 
+  /** 注意下面函数如果接受参数，则将参数转化为求内半径的函数。并返回arc对象实例，这是整个D3常用的编程思维 */
   arc.innerRadius = function(_) {
     return arguments.length ? (innerRadius = typeof _ === "function" ? _ : constant(+_), arc) : innerRadius;
   };
@@ -253,6 +279,7 @@ export default function() {
     return arguments.length ? (padAngle = typeof _ === "function" ? _ : constant(+_), arc) : padAngle;
   };
 
+  /** 经过弧形生成器处理的数据，最终需要绘制到页面上。context就是Web原生的绘图上下文，比如SVG、canvas等*/
   arc.context = function(_) {
     return arguments.length ? ((context = _ == null ? null : _), arc) : context;
   };

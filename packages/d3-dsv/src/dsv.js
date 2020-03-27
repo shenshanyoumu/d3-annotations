@@ -1,15 +1,24 @@
 var EOL = {},
     EOF = {},
-    QUOTE = 34,
-    NEWLINE = 10,
-    RETURN = 13;
+    QUOTE = 34, //ASCII引号
+    NEWLINE = 10, // ASCII换行符
+    RETURN = 13; //ASCII 回车符
 
+/**
+ * 
+ * @param {*} columns 表示TSV内容列
+ */
 function objectConverter(columns) {
   return new Function("d", "return {" + columns.map(function(name, i) {
     return JSON.stringify(name) + ": d[" + i + "] || \"\"";
   }).join(",") + "}");
 }
 
+/**
+ * 逐行读取TSV内容，并按照tab分割文本。最后通过f格式函数进行格式化
+ * @param {*} columns 
+ * @param {*} f 
+ */
 function customConverter(columns, f) {
   var object = objectConverter(columns);
   return function(row, i) {
@@ -33,18 +42,25 @@ function inferColumns(rows) {
   return columns;
 }
 
+/** 前缀补0操作 */
 function pad(value, width) {
   var s = value + "", length = s.length;
   return length < width ? new Array(width - length + 1).join(0) + s : s;
 }
 
+/** 年份格式化，针对不同年份区间的补位操作 */
 function formatYear(year) {
   return year < 0 ? "-" + pad(-year, 6)
     : year > 9999 ? "+" + pad(year, 6)
     : pad(year, 4);
 }
 
+/**
+ * 
+ * @param {*} date 表示本地化的时间对象
+ */
 function formatDate(date) {
+  /** 将本地时间归一化为时间调谐时间处理 */
   var hours = date.getUTCHours(),
       minutes = date.getUTCMinutes(),
       seconds = date.getUTCSeconds(),
@@ -57,8 +73,14 @@ function formatDate(date) {
       : "");
 }
 
+/**
+ * 传入特定的分隔符，比如"\t"
+ * @param {*} delimiter 
+ */
 export default function(delimiter) {
   var reFormat = new RegExp("[\"" + delimiter + "\n\r]"),
+
+      /** 返回某个字符的Unicode编码值 */
       DELIMITER = delimiter.charCodeAt(0);
 
   function parse(text, f) {
@@ -76,10 +98,10 @@ export default function(delimiter) {
         I = 0, // current character index
         n = 0, // current line number
         t, // current token
-        eof = N <= 0, // current token followed by EOF?
-        eol = false; // current token followed by EOL?
+        eof = N <= 0, // 表示指针指向文本结束位置
+        eol = false; // 表示指向文本最后一行
 
-    // Strip the trailing newline.
+    //剔除文本内容最后的回车换行符号
     if (text.charCodeAt(N - 1) === NEWLINE) --N;
     if (text.charCodeAt(N - 1) === RETURN) --N;
 
@@ -89,18 +111,31 @@ export default function(delimiter) {
 
       // Unescape quotes.
       var i, j = I, c;
+
+      /** 当遍历文本内容遇到引号 */
       if (text.charCodeAt(j) === QUOTE) {
+
+        /** 继续遍历，直到遇到另一个引号为止 */
         while (I++ < N && text.charCodeAt(I) !== QUOTE || text.charCodeAt(++I) === QUOTE);
+       
         if ((i = I) >= N) eof = true;
         else if ((c = text.charCodeAt(I++)) === NEWLINE) eol = true;
-        else if (c === RETURN) { eol = true; if (text.charCodeAt(I) === NEWLINE) ++I; }
+        else if (c === RETURN) {
+           eol = true; if (text.charCodeAt(I) === NEWLINE) ++I;
+          }
+
+        /** 返回引号包围的内容 */
         return text.slice(j + 1, i - 1).replace(/""/g, "\"");
       }
 
       // Find next delimiter or newline.
       while (I < N) {
         if ((c = text.charCodeAt(i = I++)) === NEWLINE) eol = true;
-        else if (c === RETURN) { eol = true; if (text.charCodeAt(I) === NEWLINE) ++I; }
+        else if (c === RETURN) {
+           eol = true;
+            if (text.charCodeAt(I) === NEWLINE)
+               ++I;
+         }
         else if (c !== DELIMITER) continue;
         return text.slice(j, i);
       }

@@ -6,12 +6,14 @@ function styleRemove(name) {
   };
 }
 
+/** DOM元素具有style属性，是DOM提供给JS操作的接口 */
 function styleConstant(name, value, priority) {
   return function() {
     this.style.setProperty(name, value, priority);
   };
 }
 
+/** style对象的属性的赋值或者删除属性 */
 function styleFunction(name, value, priority) {
   return function() {
     var v = value.apply(this, arguments);

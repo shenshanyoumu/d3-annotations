@@ -8,6 +8,7 @@ function Local() {
   this._ = "@" + (++nextId).toString(36);
 }
 
+// 对当前DOM结构中每个节点进行UUID标识
 Local.prototype = local.prototype = {
   constructor: Local,
   get: function(node) {

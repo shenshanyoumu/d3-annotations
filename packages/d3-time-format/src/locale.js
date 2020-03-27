@@ -11,7 +11,9 @@ import {
   utcYear
 } from "d3-time";
 
+
 function localDate(d) {
+  /** 年份字段值不足3位，则进行补全处理 */
   if (0 <= d.y && d.y < 100) {
     var date = new Date(-1, d.m, d.d, d.H, d.M, d.S, d.L);
     date.setFullYear(d.y);
@@ -29,15 +31,20 @@ function utcDate(d) {
   return new Date(Date.UTC(d.y, d.m, d.d, d.H, d.M, d.S, d.L));
 }
 
+
 function newDate(y, m, d) {
   return {y: y, m: m, d: d, H: 0, M: 0, S: 0, L: 0};
 }
 
+/**
+ * 
+ * @param {*} locale 表示时间格式本地化的描述对象，默认为英语世界
+ */
 export default function formatLocale(locale) {
-  var locale_dateTime = locale.dateTime,
-      locale_date = locale.date,
-      locale_time = locale.time,
-      locale_periods = locale.periods,
+  var locale_dateTime = locale.dateTime, //完整的时间格式
+      locale_date = locale.date, //日期格式显示
+      locale_time = locale.time, //时间格式显示
+      locale_periods = locale.periods, //24小时制的['AM','PM']
       locale_weekdays = locale.days,
       locale_shortWeekdays = locale.shortDays,
       locale_months = locale.months,
@@ -54,6 +61,7 @@ export default function formatLocale(locale) {
       shortMonthRe = formatRe(locale_shortMonths),
       shortMonthLookup = formatLookup(locale_shortMonths);
 
+  /** 时间格式化directive指示器 */
   var formats = {
     "a": formatShortWeekday,
     "A": formatWeekday,
@@ -87,6 +95,7 @@ export default function formatLocale(locale) {
     "%": formatLiteralPercent
   };
 
+  /** 基于世界时的格式化 */
   var utcFormats = {
     "a": formatUTCShortWeekday,
     "A": formatUTCWeekday,
@@ -174,11 +183,16 @@ export default function formatLocale(locale) {
       if (!(date instanceof Date)) date = new Date(+date);
 
       while (++i < n) {
+        /** 37的ASCII转译为"%"，时间格式化中所有指示器都以%开头 */
         if (specifier.charCodeAt(i) === 37) {
           string.push(specifier.slice(j, i));
-          if ((pad = pads[c = specifier.charAt(++i)]) != null) c = specifier.charAt(++i);
+          if ((pad = pads[c = specifier.charAt(++i)]) != null) {
+            c = specifier.charAt(++i);
+          }
           else pad = c === "e" ? " " : "0";
-          if (format = formats[c]) c = format(date, pad);
+          if (format = formats[c]) 
+            c = format(date, pad);
+
           string.push(c);
           j = i + 1;
         }
@@ -307,6 +321,7 @@ export default function formatLocale(locale) {
     return parseSpecifier(d, locale_time, string, i);
   }
 
+  /** 本地化显示时，对星期名称的简化。下面locale_shortWeekdays根据本地化展示*/
   function formatShortWeekday(d) {
     return locale_shortWeekdays[d.getDay()];
   }
@@ -380,16 +395,23 @@ export default function formatLocale(locale) {
 }
 
 var pads = {"-": "", "_": " ", "0": "0"},
-    numberRe = /^\s*\d+/, // note: ignores next directive
+    numberRe = /^\s*\d+/, // 字符串中析取数字串
     percentRe = /^%/,
-    requoteRe = /[\\^$*+?|[\]().{}]/g;
+    requoteRe = /[\\^$*+?|[\]().{}]/g; //格式directive指示器正则
 
+/**
+ * 将参数value的长度"拉伸"到固定width，位数不足则进行fill字符填充
+ * @param {*} value 
+ * @param {*} fill 
+ * @param {*} width 
+ */
 function pad(value, fill, width) {
   var sign = value < 0 ? "-" : "",
       string = (sign ? -value : value) + "",
       length = string.length;
   return sign + (length < width ? new Array(width - length + 1).join(fill) + string : string);
 }
+
 
 function requote(s) {
   return s.replace(requoteRe, "\\$&");
@@ -399,6 +421,10 @@ function formatRe(names) {
   return new RegExp("^(?:" + names.map(requote).join("|") + ")", "i");
 }
 
+/**
+ * 
+ * @param {*} names 格式化指令directive集合
+ */
 function formatLookup(names) {
   var map = {}, i = -1, n = names.length;
   while (++i < n) map[names[i].toLowerCase()] = i;
@@ -509,10 +535,12 @@ function formatDayOfMonth(d, p) {
   return pad(d.getDate(), p, 2);
 }
 
+/** 二十四小时制 */
 function formatHour24(d, p) {
   return pad(d.getHours(), p, 2);
 }
 
+/** 十二小时制，注意零点会被转化为12 */
 function formatHour12(d, p) {
   return pad(d.getHours() % 12 || 12, p, 2);
 }
@@ -642,6 +670,7 @@ function formatUTCYear(d, p) {
   return pad(d.getUTCFullYear() % 100, p, 2);
 }
 
+/** 根据世界时返回四位数年份，位数不足则补全处理 */
 function formatUTCFullYear(d, p) {
   return pad(d.getUTCFullYear() % 10000, p, 4);
 }
@@ -658,6 +687,7 @@ function formatUnixTimestamp(d) {
   return +d;
 }
 
+/** 几乎所有时间库的unix时间都以秒为单位，因此毫秒单位需要转换 */
 function formatUnixTimestampSeconds(d) {
   return Math.floor(+d / 1000);
 }

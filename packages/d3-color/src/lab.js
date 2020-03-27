@@ -35,6 +35,7 @@ export default function lab(l, a, b, opacity) {
   return arguments.length === 1 ? labConvert(l) : new Lab(l, a, b, opacity == null ? 1 : opacity);
 }
 
+/** 类似RGBA颜色空间 */
 export function Lab(l, a, b, opacity) {
   this.l = +l;
   this.a = +a;
@@ -111,6 +112,7 @@ function hcl2lab(o) {
 }
 
 define(Hcl, hcl, extend(Color, {
+  /** 在原型链上定义的方法 */
   brighter: function(k) {
     return new Hcl(this.h, this.c, this.l + K * (k == null ? 1 : k), this.opacity);
   },

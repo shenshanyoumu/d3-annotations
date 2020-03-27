@@ -2,15 +2,18 @@ function classArray(string) {
   return string.trim().split(/^|\s+/);
 }
 
+/**  */
 function classList(node) {
   return node.classList || new ClassList(node);
 }
 
+/** 获得节点的class属性列表 */
 function ClassList(node) {
   this._node = node;
   this._names = classArray(node.getAttribute("class") || "");
 }
 
+/** DOM节点的class属性列表处理器 */
 ClassList.prototype = {
   add: function(name) {
     var i = this._names.indexOf(name);
