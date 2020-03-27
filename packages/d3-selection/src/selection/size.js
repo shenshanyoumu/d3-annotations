@@ -1,3 +1,4 @@
+/**选择集节点总数 */
 export default function() {
   var size = 0;
   this.each(function() { ++size; });

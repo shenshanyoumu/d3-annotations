@@ -34,12 +34,18 @@ export default function() {
 
     // Convert number of thresholds into uniform thresholds.
     if (!Array.isArray(tz)) {
+
+      /** 刻度间隔 */
       tz = tickStep(x0, x1, tz);
+
+      /** 对scale的定义域离散化处理，注意 */
       tz = range(Math.ceil(x0 / tz) * tz, x1, tz); // exclusive
     }
 
     // Remove any thresholds outside the domain.
     var m = tz.length;
+
+    /** 数组的shift方法用于从前面出栈；而pop用于从数组尾部出栈。 */
     while (tz[0] <= x0) tz.shift(), --m;
     while (tz[m - 1] > x1) tz.pop(), --m;
 
@@ -49,6 +55,8 @@ export default function() {
     // Initialize bins.
     for (i = 0; i <= m; ++i) {
       bin = bins[i] = [];
+
+      /** 直方图的bin集合中，每个bin相当于对定义域的划分。因此bin对象[x0,x1]表示范围区间 */
       bin.x0 = i > 0 ? tz[i - 1] : x0;
       bin.x1 = i < m ? tz[i] : x1;
     }
@@ -57,6 +65,8 @@ export default function() {
     for (i = 0; i < n; ++i) {
       x = values[i];
       if (x0 <= x && x <= x1) {
+
+        /** 将属于同一个bin的数值data[i]添加到该bin 中 */
         bins[bisect(tz, x, 0, m)].push(data[i]);
       }
     }
@@ -73,6 +83,7 @@ export default function() {
     return arguments.length ? (domain = typeof _ === "function" ? _ : constant([_[0], _[1]]), histogram) : domain;
   };
 
+  /** 计算bin的间隔 */
   histogram.thresholds = function(_) {
     return arguments.length ? (threshold = typeof _ === "function" ? _ : Array.isArray(_) ? constant(slice.call(_)) : constant(_), histogram) : threshold;
   };

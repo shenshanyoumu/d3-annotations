@@ -1,3 +1,5 @@
+
+// 对enter、update和exit和合成，统一输出来操作DOM结构
 export default function(onenter, onupdate, onexit) {
   var enter = this.enter(), update = this, exit = this.exit();
   enter = typeof onenter === "function" ? onenter(enter) : enter.append(onenter + "");

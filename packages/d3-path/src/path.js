@@ -53,17 +53,15 @@ Path.prototype = path.prototype = {
     // Is the radius negative? Error.
     if (r < 0) throw new Error("negative radius: " + r);
 
-    // Is this path empty? Move to (x1,y1).
+    // fallback处理，如果待绘制的弧线只有一个点，则采用M指令定位到
     if (this._x1 === null) {
       this._ += "M" + (this._x1 = x1) + "," + (this._y1 = y1);
     }
 
-    // Or, is (x1,y1) coincident with (x0,y0)? Do nothing.
+    // 如果两个点几乎出现在同一位置，则根本无法绘制弧线
     else if (!(l01_2 > epsilon));
 
-    // Or, are (x0,y0), (x1,y1) and (x2,y2) collinear?
-    // Equivalently, is (x1,y1) coincident with (x2,y2)?
-    // Or, is the radius zero? Line to (x1,y1).
+    /** 如果两点共线，或者弧度为0，则当做直线绘制指令处理 */
     else if (!(Math.abs(y01 * x21 - y21 * x01) > epsilon) || !r) {
       this._ += "L" + (this._x1 = x1) + "," + (this._y1 = y1);
     }
@@ -132,6 +130,8 @@ Path.prototype = path.prototype = {
   rect: function(x, y, w, h) {
     this._ += "M" + (this._x0 = this._x1 = +x) + "," + (this._y0 = this._y1 = +y) + "h" + (+w) + "v" + (+h) + "h" + (-w) + "Z";
   },
+
+  /** 将svg绘制指令字符串形式输出 */
   toString: function() {
     return this._;
   }

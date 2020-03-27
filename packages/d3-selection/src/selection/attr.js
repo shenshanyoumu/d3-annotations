@@ -1,5 +1,6 @@
 import namespace from "../namespace";
 
+/** 下面各种方法，都是基于W3C的DOM规范定义的，并且下面方法在很早之前就存在提案。因此几乎不存在兼容性问题 */
 function attrRemove(name) {
   return function() {
     this.removeAttribute(name);

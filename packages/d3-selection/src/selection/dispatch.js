@@ -1,5 +1,11 @@
 import defaultView from "../window";
 
+/**
+ *  事件分发
+ * @param {*} node 符合DOM规范的节点对象
+ * @param {*} type 事件类型
+ * @param {*} params 携带的参数
+ */
 function dispatchEvent(node, type, params) {
   var window = defaultView(node),
       event = window.CustomEvent;
@@ -7,11 +13,13 @@ function dispatchEvent(node, type, params) {
   if (typeof event === "function") {
     event = new event(type, params);
   } else {
+    // 借助宿主能力创建事件对象
     event = window.document.createEvent("Event");
     if (params) event.initEvent(type, params.bubbles, params.cancelable), event.detail = params.detail;
     else event.initEvent(type, false, false);
   }
 
+  // 触发事件信号
   node.dispatchEvent(event);
 }
 

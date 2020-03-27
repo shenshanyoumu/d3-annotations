@@ -1,3 +1,4 @@
+// 基于DOM的cloneNode方法，如果参数为false则只克隆当前节点；否则递归克隆后代节点
 function selection_cloneShallow() {
   var clone = this.cloneNode(false), parent = this.parentNode;
   return parent ? parent.insertBefore(clone, this.nextSibling) : clone;
