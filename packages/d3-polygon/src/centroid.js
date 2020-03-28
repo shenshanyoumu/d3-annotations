@@ -1,3 +1,4 @@
+// 计算多边形质心
 export default function(polygon) {
   var i = -1,
       n = polygon.length,
@@ -11,6 +12,8 @@ export default function(polygon) {
   while (++i < n) {
     a = b;
     b = polygon[i];
+
+    // 类似计算多边形面积公式
     k += c = a[0] * b[1] - b[0] * a[1];
     x += (a[0] + b[0]) * c;
     y += (a[1] + b[1]) * c;
