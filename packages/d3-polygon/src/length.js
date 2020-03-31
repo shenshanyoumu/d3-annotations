@@ -1,3 +1,4 @@
+// 计算多边形周长
 export default function(polygon) {
   var i = -1,
       n = polygon.length,
@@ -16,6 +17,7 @@ export default function(polygon) {
     yb = b[1];
     xa -= xb;
     ya -= yb;
+    // 比较好理解，两个相邻顶点的距离
     perimeter += Math.sqrt(xa * xa + ya * ya);
   }
 

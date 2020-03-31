@@ -8,15 +8,15 @@ export function Color() {}
 export var darker = 0.7;
 export var brighter = 1 / darker;
 
-var reI = "\\s*([+-]?\\d+)\\s*", // 数字串正则
+var reI = "\\s*([+-]?\\d+)\\s*", // 数字串正则，可以正确匹配前后具有空格的数字串
     reN = "\\s*([+-]?\\d*\\.?\\d+(?:[eE][+-]?\\d+)?)\\s*", //浮点数字串正则
     reP = "\\s*([+-]?\\d*\\.?\\d+(?:[eE][+-]?\\d+)?)%\\s*", //携带%符号的浮点数字符串正则
     reHex = /^#([0-9a-f]{3,8})$/, //3-8位的十六进制数字串
-    reRgbInteger = new RegExp("^rgb\\(" + [reI, reI, reI] + "\\)$"),
-    reRgbPercent = new RegExp("^rgb\\(" + [reP, reP, reP] + "\\)$"),
-    reRgbaInteger = new RegExp("^rgba\\(" + [reI, reI, reI, reN] + "\\)$"),
-    reRgbaPercent = new RegExp("^rgba\\(" + [reP, reP, reP, reN] + "\\)$"),
-    reHslPercent = new RegExp("^hsl\\(" + [reN, reP, reP] + "\\)$"),
+    reRgbInteger = new RegExp("^rgb\\(" + [reI, reI, reI] + "\\)$"), // 对rgb(int,int,int)字符串的匹配，
+    reRgbPercent = new RegExp("^rgb\\(" + [reP, reP, reP] + "\\)$"), // 对rgb(%float,%float,%float)字符串的匹配
+    reRgbaInteger = new RegExp("^rgba\\(" + [reI, reI, reI, reN] + "\\)$"), //对rgba()字符串匹配
+    reRgbaPercent = new RegExp("^rgba\\(" + [reP, reP, reP, reN] + "\\)$"), //对RGBA(%flaot,%float,%float)字符串匹配
+    reHslPercent = new RegExp("^hsl\\(" + [reN, reP, reP] + "\\)$"), //HSL颜色空间表示字符串
     reHslaPercent = new RegExp("^hsla\\(" + [reN, reP, reP, reN] + "\\)$");
 
   /** 具名颜色 */
@@ -172,6 +172,7 @@ var named = {
 };
 
 define(Color, color, {
+  // 创建新的颜色对象，并复制多通道颜色值
   copy: function(channels) {
     return Object.assign(new this.constructor, this, channels);
   },
@@ -236,6 +237,7 @@ export function rgbConvert(o) {
   return new Rgb(o.r, o.g, o.b, o.opacity);
 }
 
+// 
 export function rgb(r, g, b, opacity) {
   return arguments.length === 1 ? rgbConvert(r) : new Rgb(r, g, b, opacity == null ? 1 : opacity);
 }
@@ -259,6 +261,8 @@ define(Rgb, rgb, extend(Color, {
   rgb: function() {
     return this;
   },
+
+  // 针对设置的RGBA样式字符串，需要判断是否是合法的。只有合法的RGBA样式设置才能显示出
   displayable: function() {
     return (-0.5 <= this.r && this.r < 255.5)
         && (-0.5 <= this.g && this.g < 255.5)
@@ -289,6 +293,7 @@ function hex(value) {
   return (value < 16 ? "0" : "") + value.toString(16);
 }
 
+// hue saturation和lightness三个分量，分别是色调、饱和度和亮度
 function hsla(h, s, l, a) {
   if (a <= 0) h = s = l = NaN;
   else if (l <= 0 || l >= 1) h = s = NaN;
