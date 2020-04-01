@@ -3,7 +3,8 @@ import {slice} from "./array";
 var noabort = {};
 
 /**
- * 队列数据结构，包含队列操作回调函数；defer操作必须在await/awaitALl之前完成
+ * 队列数据结构，包含队列操作回调函数；
+ * defer操作必须在await/awaitALl之前完成
  * @param {*} size 
  */
 function Queue(size) {
@@ -21,7 +22,8 @@ function Queue(size) {
 Queue.prototype = queue.prototype = {
   constructor: Queue,
   defer: function(callback) {
-    if (typeof callback !== "function") throw new Error("invalid callback");
+    if (typeof callback !== "function") 
+      throw new Error("invalid callback");
     
     /** 表示已经开始调用await函数，因此不能继续进行defer操作 */
     if (this._call) throw new Error("defer after await");
@@ -47,11 +49,15 @@ Queue.prototype = queue.prototype = {
 
 
   await: function(callback) {
-    if (typeof callback !== "function") throw new Error("invalid callback");
+    if (typeof callback !== "function") 
+      throw new Error("invalid callback");
     
     /** 执行await操作，则在队列内部通过_call指针进行调用；其中results表示任务执行结果 */
     if (this._call) throw new Error("multiple await");
-    this._call = function(error, results) { callback.apply(null, [error].concat(results)); };
+    this._call = function(error, results) { 
+      // 注意apply绑定null、undefined，表示全局window调用
+      callback.apply(null, [error].concat(results)); 
+    };
    
    
     maybeNotify(this);
@@ -59,7 +65,8 @@ Queue.prototype = queue.prototype = {
   },
 
   awaitAll: function(callback) {
-    if (typeof callback !== "function") throw new Error("invalid callback");
+    if (typeof callback !== "function") 
+      throw new Error("invalid callback");
     if (this._call) throw new Error("multiple await");
     this._call = callback;
     maybeNotify(this);
@@ -157,11 +164,14 @@ function maybeNotify(q) {
 
 /**
  * 
- * @param {*} concurrency 任务执行的并发度，参数不能小于1;当并发度为1则为串行执行
+ * @param {*} concurrency 任务执行的并发度，参数不能小于1;
+ * 当并发度为1则为串行执行
  * 
  */
 export default function queue(concurrency) {
   if (concurrency == null) concurrency = Infinity;
-  else if (!((concurrency = +concurrency) >= 1)) throw new Error("invalid concurrency");
+  else if (!((concurrency = +concurrency) >= 1)) 
+    throw new Error("invalid concurrency");
+
   return new Queue(concurrency);
 }
