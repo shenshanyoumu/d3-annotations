@@ -1,3 +1,6 @@
+// 渐变和动画都是时间T的函数，
+// 通过时间T的流逝来动态修改DOM节点的样式和位置信息
+
 export {
   linear as easeLinear
 } from "./linear.js";

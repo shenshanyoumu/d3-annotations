@@ -2,6 +2,9 @@ var tau = 2 * Math.PI,
     amplitude = 1,
     period = 0.3;
 
+/**
+ * 弹性渐变，参数分别为振幅amplitude和持续时间
+ */
 export var elasticIn = (function custom(a, p) {
   var s = Math.asin(1 / (a = Math.max(1, a))) * (p /= tau);
 
@@ -9,6 +12,7 @@ export var elasticIn = (function custom(a, p) {
     return a * Math.pow(2, 10 * --t) * Math.sin((s - t) / p);
   }
 
+  // 振幅在周期函数作用下，逐渐变小
   elasticIn.amplitude = function(a) { return custom(a, p * tau); };
   elasticIn.period = function(p) { return custom(a, p); };
 

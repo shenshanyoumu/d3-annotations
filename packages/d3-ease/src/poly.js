@@ -1,5 +1,6 @@
 var exponent = 3;
 
+// 多项式渐入，可以自定义指数
 export var polyIn = (function custom(e) {
   e = +e;
 
