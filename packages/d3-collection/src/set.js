@@ -7,6 +7,8 @@ var proto = map.prototype;
 Set.prototype = set.prototype = {
   constructor: Set,
   has: proto.has,
+
+  // 类似Map的set操作，Set集合元素独一性
   add: function(value) {
     value += "";
     this[prefix + value] = value;
@@ -24,7 +26,10 @@ function set(object, f) {
   var set = new Set;
 
   // Copy constructor.
-  if (object instanceof Set) object.each(function(value) { set.add(value); });
+  if (object instanceof Set)
+     object.each(function(value) {
+        set.add(value); 
+    });
 
   // Otherwise, assume it’s an array.
   else if (object) {

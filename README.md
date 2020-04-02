@@ -79,10 +79,10 @@ D3 的 Paths 模块定义的 API 与 SVG 的 API 几乎一一对应，方便开�
 （11）Timer(难度系数:4.5,重要性系数:4.5,内部依赖:<b>独立模块</b>)  
 用于处理并发动画的高效计时队列,注意与上面d3-queue的区别。
 
-（12）Voronoi(难度系数:4.5,重要性系数:3,内部依赖:<b>独立模块</b>)  
+（12）Voronoi(难度系数:5,重要性系数:3,内部依赖:<b>独立模块</b>)  
 针对给定的点计算维诺图，这是一种复杂的图表结构。目前该模块建议废弃，并使用<b>d3-delaunay</b>模块，d3-delaunay模块基于[Delaunator](https://github.com/mapbox/delaunator)。d3-delaunay模块构建Delaunay三角剖分的速度比d3-voronoi快5-10倍。
 
-（13）collections(难度系数:4,重要性系数:4.5,内部依赖:<b>d3-array</b>)  
+（13）collections(难度系数:3.5,重要性系数:4.5,内部依赖:<b>d3-array</b>)  
 D3 中除了数组形式的数据结构，还有一类具有 keys 值的层次结构对象，比如 Maps、Sets、Nests 等。针对这些基本的数据结构实现了整套的功能
 
 （14）Contour-轮廓多边形(难度系数:4,重要性系数:3,内部依赖:<b>d3-array</b>)  
