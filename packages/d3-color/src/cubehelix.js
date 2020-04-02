@@ -38,7 +38,7 @@ export function Cubehelix(h, s, l, opacity) {
 
 define(Cubehelix, cubehelix, extend(Color, {
   brighter: function(k) {
-    // 注意==会进行类型隐式转化
+    // 注意==会进行类型隐式转化，将undefined、''等转换为null
     k = k == null ? brighter : Math.pow(brighter, k);
     return new Cubehelix(this.h, this.s, this.l * k, this.opacity);
   },

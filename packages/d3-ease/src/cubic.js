@@ -2,6 +2,7 @@ export function cubicIn(t) {
   return t * t * t;
 }
 
+// 时间参数t应该不从0开始，渐出效果趋近于0
 export function cubicOut(t) {
   return --t * t * t + 1;
 }

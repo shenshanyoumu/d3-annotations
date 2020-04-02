@@ -7,6 +7,8 @@ var os = require("os"),
     commander = require("commander"),
     dsv = require("../");
 
+    // basename表示返回文件名称，而忽略文件路径；InDelimiter表示输入文件的分隔符类型
+    // OutDelimiter表示输出目标文件的分隔符类型
 var program = path.basename(process.argv[1]),
     defaultInDelimiter = program.slice(0, 3) === "tsv" ? "\t" : ",",
     defaultOutDelimiter = program.slice(-3) === "tsv" ? "\t" : ",";
@@ -24,9 +26,14 @@ commander
 var inFormat = dsv.dsvFormat(commander.inputDelimiter),
     outFormat = dsv.dsvFormat(commander.outputDelimiter);
 
+// 异步读取特定分隔符的文件，然后经过转换后写入目标文件
 rw.readFile(commander.args[0] || "-", function(error, text) {
   if (error) throw error;
-  rw.writeFile("-", iconv.encode(outFormat.format(inFormat.parse(iconv.decode(text, commander.inputEncoding))) + os.EOL, commander.outputEncoding), function(error) {
+  rw.writeFile("-", iconv.encode(
+    outFormat.format(
+      inFormat.parse(
+        iconv.decode(text, commander.inputEncoding))) + os.EOL, 
+        commander.outputEncoding), function(error) {
     if (error) throw error;
   });
 });

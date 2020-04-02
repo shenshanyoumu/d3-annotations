@@ -131,7 +131,7 @@ Path.prototype = path.prototype = {
     this._ += "M" + (this._x0 = this._x1 = +x) + "," + (this._y0 = this._y1 = +y) + "h" + (+w) + "v" + (+h) + "h" + (-w) + "Z";
   },
 
-  /** 将svg绘制指令字符串形式输出 */
+  /** 将svg绘制指令字符串形式输出,注意该方法是对Object.prototype.toString的重写 */
   toString: function() {
     return this._;
   }

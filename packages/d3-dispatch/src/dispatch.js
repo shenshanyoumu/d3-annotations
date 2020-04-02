@@ -6,7 +6,8 @@ var noop = {value: function() {}};
 function dispatch() {
   for (var i = 0, n = arguments.length, _ = {}, t; i < n; ++i) {
     /** 下面表示事件类型type不能为空 */
-    if (!(t = arguments[i] + "") || (t in _) || /[\s.]/.test(t)) throw new Error("illegal type: " + t);
+    if (!(t = arguments[i] + "") || (t in _) || /[\s.]/.test(t)) 
+      throw new Error("illegal type: " + t);
    
     /** 下面的含义是同一个事件类型可以存储多个事件对象 */
     _[t] = [];
@@ -47,7 +48,8 @@ Dispatch.prototype = dispatch.prototype = {
         i = -1,
         n = T.length; //T数组表示待分发的事件对象集
 
-     /** 事件注册时没有传递回调函数，则遍历dispatch对象确认是否之前注册过；
+     /** 
+      * 事件注册时没有传递回调函数，则遍历dispatch对象确认是否之前注册过；
       * 如果之前注册过，则直接使用之前的回调函数
       */
     if (arguments.length < 2) {
