@@ -56,6 +56,7 @@ export default function() {
     var polygons = [],
         holes = [];
 
+    // 等值环
     isorings(values, value, function(ring) {
       smooth(ring, values, value);
       if (area(ring) > 0) polygons.push([ring]);
