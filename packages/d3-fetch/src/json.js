@@ -3,6 +3,7 @@ function responseJson(response) {
   return response.json();
 }
 
+// JSON格式响应报文的拦截
 export default function(input, init) {
   return fetch(input, init).then(responseJson);
 }
