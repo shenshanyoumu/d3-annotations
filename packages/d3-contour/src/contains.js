@@ -20,7 +20,10 @@ function ringContains(ring, point) {
 
   /** 注意下面的迭代，限制了索引i和索引j是邻接点 */
   for (var i = 0, n = ring.length, j = n - 1; i < n; j = i++) {
-    var pi = ring[i], xi = pi[0], yi = pi[1], pj = ring[j], xj = pj[0], yj = pj[1];
+    var pi = ring[i], xi = pi[0], yi = pi[1],
+        pj = ring[j], xj = pj[0], yj = pj[1];
+   
+   
     /** 表示点point不在环上，而在pi和pj构成的线段中 */
     if (segmentContains(pi, pj, point)) return 0;
 

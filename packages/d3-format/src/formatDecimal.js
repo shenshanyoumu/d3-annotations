@@ -7,9 +7,11 @@ export default function(x, p) {
   
     var i, coefficient = x.slice(0, i);
 
-  // 根据科学计数法，系数整数部分为个位数，然后是"."分割，因此coefficent.slice(2)表示截取系数小数部分
+  // 根据科学计数法，系数整数部分为个位数，然后是"."分割，
+  // 因此coefficent.slice(2)表示截取系数小数部分
   return [
     coefficient.length > 1 ? coefficient[0] + coefficient.slice(2) : coefficient,
+    
     // 指数部分字符串转数值型
     +x.slice(i + 1)
   ];

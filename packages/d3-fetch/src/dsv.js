@@ -3,7 +3,9 @@ import text from "./text";
 
 function dsvParse(parse) {
   return function(input, init, row) {
-    if (arguments.length === 2 && typeof init === "function") row = init, init = undefined;
+    if (arguments.length === 2 && typeof init === "function")
+    row = init, init = undefined;
+    
     return text(input, init).then(function(response) {
       return parse(response, row);
     });
