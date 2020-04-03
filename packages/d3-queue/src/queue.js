@@ -111,7 +111,8 @@ function end(q, i) {
     q._tasks[i] = null;
 
     /** 如果任务队列已经异常，则直接退出 */
-    if (q._error != null) return; // ignore secondary errors
+    if (q._error != null) 
+      return; // ignore secondary errors
 
     /** 如果任务i导致异常，则需要终止处理 */
     if (e != null) {

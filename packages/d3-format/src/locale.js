@@ -8,7 +8,10 @@ import {prefixExponent} from "./formatPrefixAuto.js";
 import identity from "./identity.js";
 
 var map = Array.prototype.map,
-    prefixes = ["y","z","a","f","p","n","µ","m","","k","M","G","T","P","E","Z","Y"];
+
+// 符合SI国际单位制的前缀符号列表
+    prefixes = ["y","z","a","f","p","n","µ","m","","k",
+    "M","G","T","P","E","Z","Y"];
 
 export default function(locale) {
   var group = locale.grouping === undefined || locale.thousands === undefined ? identity : formatGroup(map.call(locale.grouping, Number), locale.thousands + ""),

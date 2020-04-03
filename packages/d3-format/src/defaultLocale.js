@@ -15,6 +15,8 @@ defaultLocale({
 export default function defaultLocale(definition) {
   locale = formatLocale(definition);
   format = locale.format;
+
+  // 基于SI国际单位制的量纲前缀串
   formatPrefix = locale.formatPrefix;
   return locale;
 }

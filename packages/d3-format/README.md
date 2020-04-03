@@ -84,6 +84,7 @@ Locale files are published to npm and can be loaded using [d3.json](https://gith
 d3.json("https://cdn.jsdelivr.net/npm/d3-format@1/locale/ru-RU.json", function(error, locale) {
   if (error) throw error;
 
+  // 根据本地化的格式要求，对货币、数字和千分位符号的处理
   d3.formatDefaultLocale(locale);
 
   var format = d3.format("$,");
@@ -221,6 +222,7 @@ FormatSpecifier {
 This method is useful for understanding how format specifiers are parsed and for deriving new specifiers. For example, you might compute an appropriate precision based on the numbers you want to format using [precisionFixed](#precisionFixed) and then create a new format:
 
 ```js
+// 参数"f"表示formatSpecifier的type类型，即对待格式化数值进行浮点处理
 var s = d3.formatSpecifier("f");
 s.precision = d3.precisionFixed(0.01);
 var f = d3.format(s);
@@ -327,6 +329,7 @@ f(1.01); // "1.01e+0"
 
 Returns a *locale* object for the specified *definition* with [*locale*.format](#locale_format) and [*locale*.formatPrefix](#locale_formatPrefix) methods. The *definition* must include the following properties:
 
+<!-- decimal表示小数符号 -->
 * `decimal` - the decimal point (e.g., `"."`).
 * `thousands` - the group separator (e.g., `","`).
 * `grouping` - the array of group sizes (e.g., `[3]`), cycled as needed.
