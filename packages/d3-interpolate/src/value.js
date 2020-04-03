@@ -9,6 +9,7 @@ import constant from "./constant.js";
 
 /**
  * 根据参数a、b类型返回对应的插值函数
+ * 参数可以为字符串、对象、颜色、数值和布尔值等
  * @param {*} a 
  * @param {*} b 
  */

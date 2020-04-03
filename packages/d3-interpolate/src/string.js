@@ -1,6 +1,6 @@
 import number from "./number.js";
 
-/** 具有代数意义的数字串正则表达式 */
+/** 具有数字串正则表达式，包括小数形式的数字串 */
 var reA = /[-+]?(?:\d+\.?\d*|\.?\d+)(?:[eE][-+]?\d+)?/g,
     reB = new RegExp(reA.source, "g");
 

@@ -91,11 +91,10 @@ D3 中除了数组形式的数据结构，还有一类具有 keys 值的层次�
 （15）Fetch(难度系数:3,重要性系数:4,内部依赖:<b>d3-dsv</b>)  
 D3 的数据源大部分来自网络，因此定义 Fetch 模块实现网络请求。响应数据要么是JSON或者DSV格式文件，因此需要对数据进行转换处理才能被D3相应模块接收。注意fetch模块基于W3C的fetch规范，针对旧版浏览器使用XMLHTTPRequest请求
 
-（16）format(难度系数:4.5,重要性系数:3,内部依赖:<b>d3-queue</b>)
+（16）format(难度系数:4,重要性系数:3,内部依赖:<b>d3-queue</b>)
 对一些数据格式进行转换，以方便人类理解,实际上不影响d3的工作流程。即<b>FOrmatting numbers for human consumption is the purpose of d3-format</b>
 
-（17）Interpolators(难度系数:4.5,重要性系数:4,内部依赖:<b>d3-color</b>)  
-插值器用于对数组、颜色、字符串、数组、对象等任何具有离散的结构进行差值
+（17）Interpolate(难度系数:4,重要性系数:4,内部依赖:<b>d3-color</b>)  插值器用于对数组、颜色、字符串、数组、对象等任何具有离散的结构进行差值
 
 （18）Quadtrees(难度系数:3.5,重要性系数:3,内部依赖:<b>d3-array</b>)  
 对二维几何空间进行递归划分的模块
