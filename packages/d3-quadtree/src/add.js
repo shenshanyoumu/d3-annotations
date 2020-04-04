@@ -1,6 +1,9 @@
+// 在给定的四叉树中新增一个坐标点，则需要调整四叉树结构
 export default function(d) {
   var x = +this._x.call(null, d),
       y = +this._y.call(null, d);
+
+  // this.cover(x,y)表示将原四叉树覆盖到给定的坐标[x,y]
   return add(this.cover(x, y), x, y, d);
 }
 
@@ -23,26 +26,34 @@ function add(tree, x, y, d) {
       i,
       j;
 
-  // If the tree is empty, initialize the root as a leaf.
+  // 如果是空树，则初始化四叉树，并对根节点的data属性赋值
   if (!node) return tree._root = leaf, tree;
 
-  // Find the existing leaf for the new point, or add it.
+  // 如果四叉树的叶子节点恰好无法覆盖该坐标点，则直接添加为叶子节点即可。
+  // 同时也说明一个节点的子节点不满4个
   while (node.length) {
     if (right = x >= (xm = (x0 + x1) / 2)) x0 = xm; else x1 = xm;
     if (bottom = y >= (ym = (y0 + y1) / 2)) y0 = ym; else y1 = ym;
-    if (parent = node, !(node = node[i = bottom << 1 | right])) return parent[i] = leaf, tree;
+    if (parent = node, !(node = node[i = bottom << 1 | right])) 
+      return parent[i] = leaf, tree;
   }
 
-  // Is the new point is exactly coincident with the existing point?
+  // 此时的node一定是四叉树叶子结点，计算给叶子结点的XY坐标分量
   xp = +tree._x.call(null, node.data);
   yp = +tree._y.call(null, node.data);
-  if (x === xp && y === yp) return leaf.next = node, parent ? parent[i] = leaf : tree._root = leaf, tree;
+
+  // 如果同一位置出现两个相同节点，则都作为parent节点的子节点插入。此时parent的叶子节点数目不能超过4
+  if (x === xp && y === yp) 
+    return leaf.next = node, parent ? parent[i] = leaf : tree._root = leaf, tree;
 
   // Otherwise, split the leaf node until the old and new point are separated.
+  // 如果parent的叶子节点超过4；则需要将叶子节点拆分为新的parent和子节点
   do {
     parent = parent ? parent[i] = new Array(4) : tree._root = new Array(4);
     if (right = x >= (xm = (x0 + x1) / 2)) x0 = xm; else x1 = xm;
     if (bottom = y >= (ym = (y0 + y1) / 2)) y0 = ym; else y1 = ym;
+
+    // 
   } while ((i = bottom << 1 | right) === (j = (yp >= ym) << 1 | (xp >= xm)));
   return parent[j] = node, parent[i] = leaf, tree;
 }
