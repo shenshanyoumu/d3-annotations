@@ -1,3 +1,4 @@
+// 坐标X分量
 export function defaultX(d) {
   return d[0];
 }

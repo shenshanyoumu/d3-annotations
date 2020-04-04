@@ -19,7 +19,8 @@ function linear(a, d) {
  * @param {*} y 
  */
 function exponential(a, b, y) {
-  return a = Math.pow(a, y), b = Math.pow(b, y) - a, y = 1 / y, function(t) {
+  return a = Math.pow(a, y), b = Math.pow(b, y) - a, 
+    y = 1 / y, function(t) {
     return Math.pow(a + t * b, y);
   };
 }
