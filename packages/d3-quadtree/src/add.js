@@ -55,6 +55,8 @@ function add(tree, x, y, d) {
 
     // 
   } while ((i = bottom << 1 | right) === (j = (yp >= ym) << 1 | (xp >= xm)));
+
+  
   return parent[j] = node, parent[i] = leaf, tree;
 }
 
