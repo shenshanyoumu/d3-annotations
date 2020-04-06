@@ -109,7 +109,7 @@ D3 的数据源大部分来自网络，因此定义 Fetch 模块实现网络请�
 D3 的实现哲学中并不会针对每种图表进行设计，而是对一类图表抽取共性的东西，并称之为 layout。布局就是 D3 在连接数据和图表实例的桥梁，开发者最主要的工作就是将数据转换为对应图表的 layout。d3.chord(matrix)返回一个chord数组，每个chord表示两个节点的双向流量。chord是一个对象，具有两个属性source和target，其中每个属性又具有一系列属性
 
 （22）drag(难度系数:3.5,重要性系数:4.5,内部依赖:<b>d3-dispatch|d3-selection</b>)  
-在 SVG、HTML 和 Canvas 上实现拖拽行为
+在 SVG、HTML 和 Canvas 上实现拖拽行为，拖拽事件基于W3C事件规范，采用d3-dispatch事件分发机制。注意的是，拖拽行为可由鼠标或者touchable的设备触发，而d3-drag屏蔽了底层事件，而是通过自定义"start"、"drag"和"end"三个事件来统一行为监听
 
 （23）Geographies(难度系数:5,重要性系数:3.5,内部依赖:<b>d3-array|d3-format</b>)  
 有关地图投影、地图形态和相关数学运算的模块。大量涉及球面、曲面运算
