@@ -47,6 +47,7 @@ export default function() {
 
     if (!context) context = buffer = path();
 
+    // 画布上下文对象,下面代码片段用于绘制绶带
     context.moveTo(sx0, sy0);
     context.arc(0, 0, sr, sa0, sa1);
     if (sa0 !== ta0 || sa1 !== ta1) { // TODO sr !== tr?
@@ -59,6 +60,8 @@ export default function() {
     if (buffer) return context = null, buffer + "" || null;
   }
 
+
+  // 绶带半径,用于控制绶带的绘制弧度
   ribbon.radius = function(_) {
     return arguments.length ? (radius = typeof _ === "function" ? _ : constant(+_), ribbon) : radius;
   };
@@ -71,14 +74,17 @@ export default function() {
     return arguments.length ? (endAngle = typeof _ === "function" ? _ : constant(+_), ribbon) : endAngle;
   };
 
+  // 绶带流出的流量强度
   ribbon.source = function(_) {
     return arguments.length ? (source = _, ribbon) : source;
   };
 
+  // 绶带流入的流量强度
   ribbon.target = function(_) {
     return arguments.length ? (target = _, ribbon) : target;
   };
 
+  // 表示用于绘制绶带的画布对象,比如SVG或者canvas
   ribbon.context = function(_) {
     return arguments.length ? ((context = _ == null ? null : _), ribbon) : context;
   };
