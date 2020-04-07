@@ -1,5 +1,6 @@
 import curveLinear from "./linear.js";
 
+// 所有曲线生成器都继承了Linear生成器的基础能力
 export var curveRadialLinear = curveRadial(curveLinear);
 
 function Radial(curve) {
@@ -19,6 +20,8 @@ Radial.prototype = {
   lineEnd: function() {
     this._curve.lineEnd();
   },
+
+  // 类似极坐标，分别为弧度和半径。下面_curve.point继承自linear的point方法
   point: function(a, r) {
     this._curve.point(r * Math.sin(a), r * -Math.cos(a));
   }
