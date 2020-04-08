@@ -14,6 +14,7 @@ export default function() {
       curve = curveLinear,
       output = null;
 
+  // data为坐标点列表；区域图元由line曲线闭合而成，而line由坐标点连接而成
   function area(data) {
     var i,
         j,
@@ -102,7 +103,8 @@ export default function() {
   };
 
   area.context = function(_) {
-    return arguments.length ? (_ == null ? context = output = null : output = curve(context = _), area) : context;
+    return arguments.length ? 
+    (_ == null ? context = output = null : output = curve(context = _), area) : context;
   };
 
   return area;

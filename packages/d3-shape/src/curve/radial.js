@@ -21,7 +21,8 @@ Radial.prototype = {
     this._curve.lineEnd();
   },
 
-  // 类似极坐标，分别为弧度和半径。下面_curve.point继承自linear的point方法
+  // 类似极坐标，分别为弧度和半径。
+  // 下面_curve.point继承自linear的point方法。用于绘制径向曲线
   point: function(a, r) {
     this._curve.point(r * Math.sin(a), r * -Math.cos(a));
   }
