@@ -13,6 +13,7 @@ export default {
         y = ky * r;
     context.moveTo(0, -r);
     context.lineTo(x, y);
+    
     for (var i = 1; i < 5; ++i) {
       var a = tau * i / 5, //正五角星的角度
           c = Math.cos(a),

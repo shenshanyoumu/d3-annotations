@@ -1,5 +1,5 @@
 /**
- * 根据给定序列长度，生成基数序列
+ * series的内容并不关心，生成索引序列
  * @param {*} series 
  */
 export default function(series) {

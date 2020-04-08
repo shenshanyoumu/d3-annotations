@@ -1,6 +1,7 @@
 import {path} from "d3-path";
 import constant from "./constant.js";
-import {abs, acos, asin, atan2, cos, epsilon, halfPi, max, min, pi, sin, sqrt, tau} from "./math.js";
+import {abs, acos, asin, atan2, cos, epsilon, 
+  halfPi, max, min, pi, sin, sqrt, tau} from "./math.js";
 
 /** 扇形或者环状图形的内半径  */
 function arcInnerRadius(d) {
@@ -21,7 +22,8 @@ function arcEndAngle(d) {
   return d.endAngle;
 }
 
-/** 在一些扇形或环形中，两个邻接的弧形间存在没有具体业务意义的填充区 */
+/** 在一些扇形或环形中，
+ * 两个邻接的弧形间存在没有具体业务意义的填充区 */
 function arcPadAngle(d) {
   return d && d.padAngle; // Note: optional!
 }

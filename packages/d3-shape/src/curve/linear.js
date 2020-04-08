@@ -37,7 +37,7 @@ Linear.prototype = {
     // 将参数(x,y)数值化处理
     x = +x, y = +y;
     switch (this._point) {
-      // point的四种状态，来指示画布上下文的线性图元绘制过程
+      // point的四种状态，来指示画布对象的线段图元绘制过程
       case 0: this._point = 1; 
         this._line ? this._context.lineTo(x, y) : 
         this._context.moveTo(x, y); break;
@@ -50,6 +50,8 @@ Linear.prototype = {
   }
 };
 
+// context表示画布对象，用于将generator输出到视觉呈现
+// context一般为d3-path，d3-path屏蔽了具体的SVG绘制命令
 export default function(context) {
   return new Linear(context);
 }

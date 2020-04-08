@@ -3,6 +3,7 @@ var c = -0.5,
     k = 1 / Math.sqrt(12),
     a = (k / 2 + 1) * 3;
 
+    // 绘制Y形图元，三通。从下面绘制的轮廓可知Y形具有厚度
 export default {
   draw: function(context, size) {
     var r = Math.sqrt(size / a),

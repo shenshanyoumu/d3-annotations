@@ -39,7 +39,9 @@ BasisClosed.prototype = {
     switch (this._point) {
       case 0: this._point = 1; this._x2 = x, this._y2 = y; break;
       case 1: this._point = 2; this._x3 = x, this._y3 = y; break;
-      case 2: this._point = 3; this._x4 = x, this._y4 = y; this._context.moveTo((this._x0 + 4 * this._x1 + x) / 6, (this._y0 + 4 * this._y1 + y) / 6); break;
+      case 2: this._point = 3; this._x4 = x, this._y4 = y; 
+      this._context.moveTo((this._x0 + 4 * this._x1 + x) / 6, 
+      (this._y0 + 4 * this._y1 + y) / 6); break;
       default: point(this, x, y); break;
     }
     this._x0 = this._x1, this._x1 = x;
