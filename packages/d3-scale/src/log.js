@@ -16,6 +16,7 @@ function transformLogn(x) {
   return -Math.log(-x);
 }
 
+// 指数函数
 function transformExpn(x) {
   return -Math.exp(-x);
 }
@@ -24,25 +25,30 @@ function pow10(x) {
   return isFinite(x) ? +("1e" + x) : x < 0 ? 0 : x;
 }
 
+// 幂函数
 function powp(base) {
   return base === 10 ? pow10
       : base === Math.E ? Math.exp
       : function(x) { return Math.pow(base, x); };
 }
 
+// 定义不同的底的对数函数
 function logp(base) {
   return base === Math.E ? Math.log
       : base === 10 && Math.log10
       || base === 2 && Math.log2
-      || (base = Math.log(base), function(x) { return Math.log(x) / base; });
+      || (base = Math.log(base), function(x) { 
+        return Math.log(x) / base; });
 }
 
+// 函数的奇偶数处理
 function reflect(f) {
   return function(x) {
     return -f(-x);
   };
 }
 
+// transform对定义域或值域进行参数转换，以满足当前对数scale的参数要求
 export function loggish(transform) {
   var scale = transform(transformLog, transformExp),
       domain = scale.domain,
@@ -50,8 +56,11 @@ export function loggish(transform) {
       logs,
       pows;
 
+      // 
   function rescale() {
     logs = logp(base), pows = powp(base);
+
+    // 定义域为负数，则不符合对数处理要求，需要进行奇偶性变换处理
     if (domain()[0] < 0) {
       logs = reflect(logs), pows = reflect(pows);
       transform(transformLogn, transformExpn);

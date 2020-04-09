@@ -17,6 +17,7 @@ export default function(series) {
       tops = [],
       bottoms = [];
 
+  // 
   for (i = 0; i < n; ++i) {
     j = order[i];
     if (top < bottom) {
