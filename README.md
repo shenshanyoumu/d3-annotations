@@ -126,10 +126,10 @@ D3 的实现哲学中并不会针对每种图表进行设计，而是对一类�
 （27）Brush(难度系数:3.5,重要性系数:4,内部依赖:<b>d3-dispatch|d3-drag|d3-interpolate|d3-selection|d3-transition</b>)  
 刷子的作用是在可视图表中选取一个区域，用于后续的缩放操作
 
-（28）Scales(难度系数:4.5,重要性系数:5,内部依赖:<b>d3-array|d3-collection|d3-format|d3-interpolate|d3-time|d3-time-format|d3-color</b>)  
-比例尺的作用就是将抽象的数据映射为人类可以理解的图表的关键工具。比例尺分为线性、非线性、序列、发散比例尺、量化比例尺等
+（28）Scale(难度系数:4.5,重要性系数:5,内部依赖:<b>d3-array|d3-collection|d3-format|d3-interpolate|d3-time|d3-time-format|d3-color</b>)  
+scale是图表能够正常显示的关键，是具有数学含义的映射关系，如果说format是面向人类的工具，则scale是图表内生的数学尺度。比例尺分为线性、非线性、序列、发散比例尺、量化比例尺等
 
-（29）Transitions(难度系数:4,重要性系数:4.5,内部依赖:<b>d3-color|d3-dispatch|d3-ease|d3-interpolate|d3-selector|d3-timer</b>)  
+（29）Transition(难度系数:4,重要性系数:4.5,内部依赖:<b>d3-color|d3-dispatch|d3-ease|d3-interpolate|d3-selector|d3-timer</b>)  
 对选择的 DOM 集进行渐变动画的模块
 
 （30）Hierarchies(难度系数:4,重要性系数:4.5,内部依赖:<b>d3-array|d3-dsv|d3-queue|d3-random</b>)  

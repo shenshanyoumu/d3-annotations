@@ -9,6 +9,7 @@ export default function identity(domain) {
     return isNaN(x = +x) ? unknown : x;
   }
 
+  // 如果函数与反函数等价，则说明是定义域的自映射
   scale.invert = scale;
 
   scale.domain = scale.range = function(_) {

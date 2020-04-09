@@ -2,6 +2,7 @@ import {ascending, bisect, quantile as threshold} from "d3-array";
 import {slice} from "./array";
 import {initRange} from "./init";
 
+// 分位数scale
 export default function quantile() {
   var domain = [],
       range = [],
@@ -11,7 +12,8 @@ export default function quantile() {
   function rescale() {
     var i = 0, n = Math.max(1, range.length);
     thresholds = new Array(n - 1);
-    while (++i < n) thresholds[i - 1] = threshold(domain, i / n);
+    while (++i < n) 
+      thresholds[i - 1] = threshold(domain, i / n);
     return scale;
   }
 

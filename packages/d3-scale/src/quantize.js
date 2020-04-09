@@ -3,6 +3,8 @@ import {slice} from "./array";
 import {linearish} from "./linear";
 import {initRange} from "./init";
 
+// 量化scale，定义域为连续区间，而值域离散化；
+// 注意ordinal scale，定义域和值域都是离散化的
 export default function quantize() {
   var x0 = 0,
       x1 = 1,
@@ -18,7 +20,8 @@ export default function quantize() {
   function rescale() {
     var i = -1;
     domain = new Array(n);
-    while (++i < n) domain[i] = ((i + 1) * x1 - (i - n) * x0) / (n + 1);
+    while (++i < n) 
+      domain[i] = ((i + 1) * x1 - (i - n) * x0) / (n + 1);
     return scale;
   }
 
