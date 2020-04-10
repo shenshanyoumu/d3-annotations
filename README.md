@@ -55,7 +55,7 @@ D3 中所有数据源都是数组形式，定义了一系列数组的运算函�
 （3）dispatch(难度系数:3,重要性系数:5,内部依赖:<b>独立模块</b></b>)  
 D3 实现了一套事件发布/订阅机制，用于分离事件和回调函数的耦合
 
-（4）Selections(难度系数:4.5,重要性系数:5,内部依赖:<b>独立模块</b>)  
+（4）Selection(难度系数:4.5,重要性系数:5,内部依赖:<b>独立模块</b>)  
 这是 D3 用于 DOM 结构和数据集绑定的工具模块，D3 的数据驱动思想就是通过 Selection 实现，选择器根据数据绑定 DOM，并可对 DOM 节点进行属性修改和事件处理。
 
 （5）ease(难度系数:4,重要性系数:4,内部依赖:<b>独立模块</b>)  
@@ -123,8 +123,8 @@ D3 的实现哲学中并不会针对每种图表进行设计，而是对一类�
 （26）Time Format(难度系数:4,重要性系数:3.5,内部依赖:<b>d3-time|d3-queue</b>)  
 受到 C 语言 strptime 和 strftime 函数的启发，实现的时间格式模块
 
-（27）Brush(难度系数:3.5,重要性系数:4,内部依赖:<b>d3-dispatch|d3-drag|d3-interpolate|d3-selection|d3-transition</b>)  
-刷子的作用是在可视图表中选取一个区域，用于后续的缩放操作
+（27）Brush(难度系数:5,重要性系数:4.5,内部依赖:<b>d3-dispatch|d3-drag|d3-interpolate|d3-selection|d3-transition</b>)  
+刷子的作用是在图表中选取一个区域，用于后续的缩放操作。其原理是基于d3-selection来得到brushing覆盖过的DOM节点集合，并对DOM节点绑定brush事件对象
 
 （28）Scale(难度系数:4.5,重要性系数:5,内部依赖:<b>d3-array|d3-collection|d3-format|d3-interpolate|d3-time|d3-time-format|d3-color</b>)  
 scale是图表能够正常显示的关键，是具有数学含义的映射关系，如果说format是面向人类的工具，则scale是图表内生的数学尺度。比例尺分为线性、非线性、序列、发散比例尺、量化比例尺等

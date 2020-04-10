@@ -8,7 +8,8 @@
     "svg",
     "animation",
     "canvas",
-    "annotations"
+    "annotations",
+    "d3"
   ],
   "homepage": "https://d3js.org",
   "repository": {
