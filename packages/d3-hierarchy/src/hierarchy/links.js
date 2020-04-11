@@ -1,3 +1,4 @@
+// Links数组中，保存当前节点父节点与当前节点的连接关系
 export default function() {
   var root = this, links = [];
   root.each(function(node) {

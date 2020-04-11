@@ -17,6 +17,7 @@ export default function quantize() {
     return x <= x ? range[bisect(domain, x, 0, n)] : unknown;
   }
 
+  // 
   function rescale() {
     var i = -1;
     domain = new Array(n);

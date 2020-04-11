@@ -10,6 +10,10 @@ import node_descendants from "./descendants.js";
 import node_leaves from "./leaves.js";
 import node_links from "./links.js";
 
+
+// hierarchy生成器，用于根据参数来生成对应的层级数据结构
+// data表示原始数组数据，children描述了如何获得'children'节点集合
+// 比如在实际开发中，数组中子元素可能是别的名字，比如child。
 export default function hierarchy(data, children) {
   var root = new Node(data),
       valued = +data.value && (root.value = data.value),
@@ -20,10 +24,14 @@ export default function hierarchy(data, children) {
       i,
       n;
 
+  // children函数，用于获取当前节点的子节点
   if (children == null) children = defaultChildren;
 
+  // 层级优先遍历算法，
   while (node = nodes.pop()) {
     if (valued) node.value = +node.data.value;
+
+    // 当前节点存在子节点，则遍历所有子节点，并用子节点新建Node对象，记录子节点的depth深度
     if ((childs = children(node.data)) && (n = childs.length)) {
       node.children = new Array(n);
       for (i = n - 1; i >= 0; --i) {
@@ -34,6 +42,7 @@ export default function hierarchy(data, children) {
     }
   }
 
+  // 
   return root.eachBefore(computeHeight);
 }
 
@@ -49,12 +58,15 @@ function copyData(node) {
   node.data = node.data.data;
 }
 
+// 从下到上计算节点的height，叶子节点的height为0
 export function computeHeight(node) {
   var height = 0;
   do node.height = height;
   while ((node = node.parent) && (node.height < ++height));
 }
 
+// 层级布局中节点的depth表示从root节点到当前节点的深度；
+// height表示当前节点到叶子节点的高度。d3通过这两个属性来美化布局
 export function Node(data) {
   this.data = data;
   this.depth =
