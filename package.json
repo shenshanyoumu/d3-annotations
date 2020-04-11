@@ -1,6 +1,6 @@
 {
   "name": "d3-in-depth",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "D3源码分析",
   "keywords": [
     "dom",
@@ -15,5 +15,23 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/d3/d3.git"
+  },
+  "scripts": {
+    "release-major": "standard-version -r major",
+    "release-minor": "standard-version -r minor",
+    "release-patch": "standard-version -r patch"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^8.2.0",
+    "@commitlint/config-conventional": "^8.2.0",
+    "commitizen": "^4.0.3",
+    "cz-conventional-changelog": "^3.0.2",
+    "husky": "^3.0.9",
+    "standard-version": "^7.0.0"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
   }
 }
