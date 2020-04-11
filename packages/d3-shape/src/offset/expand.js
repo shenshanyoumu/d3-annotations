@@ -1,5 +1,6 @@
 import none from "./none.js";
 
+// series表示二维数组，每一行表示
 export default function(series, order) {
   if (!((n = series.length) > 0)) return;
   for (var i, n, j = 0, m = series[0].length, y; j < m; ++j) {

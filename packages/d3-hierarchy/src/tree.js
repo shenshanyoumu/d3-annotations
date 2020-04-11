@@ -4,20 +4,13 @@ function defaultSeparation(a, b) {
   return a.parent === b.parent ? 1 : 2;
 }
 
-// function radialSeparation(a, b) {
-//   return (a.parent === b.parent ? 1 : 2) / a.depth;
-// }
 
-// This function is used to traverse the left contour of a subtree (or
-// subforest). It returns the successor of v on this contour. This successor is
-// either given by the leftmost child of v or by the thread of v. The function
-// returns null if and only if v is on the highest level of its subtree.
+// 节点v如果存在孩子节点，则返回最左边孩子节点；否则返回当前节点的thread
 function nextLeft(v) {
   var children = v.children;
   return children ? children[0] : v.t;
 }
 
-// This function works analogously to nextLeft.
 function nextRight(v) {
   var children = v.children;
   return children ? children[children.length - 1] : v.t;
@@ -61,7 +54,7 @@ function TreeNode(node, i) {
   this._ = node;
   this.parent = null;
   this.children = null;
-  this.A = null; // default ancestor
+  this.A = null; // 默认祖先节点
   this.a = this; // ancestor
   this.z = 0; // prelim
   this.m = 0; // mod
@@ -82,6 +75,7 @@ function treeRoot(root) {
       i,
       n;
 
+  // 逐层级将树形结构上节点保存到nodes数组，并为孩子节点新增parent指针
   while (node = nodes.pop()) {
     if (children = node._.children) {
       node.children = new Array(n = children.length);
@@ -92,6 +86,7 @@ function treeRoot(root) {
     }
   }
 
+  // root节点的parent为null，孩子节点即root本身
   (tree.parent = new TreeNode(null, 0)).children = [tree];
   return tree;
 }
@@ -104,6 +99,7 @@ export default function() {
       nodeSize = null;
 
   function tree(root) {
+    // 构建具有children/parent双向指针的树
     var t = treeRoot(root);
 
     // Compute the layout using Buchheim et al.’s algorithm.

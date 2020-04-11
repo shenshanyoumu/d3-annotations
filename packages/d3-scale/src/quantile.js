@@ -9,6 +9,7 @@ export default function quantile() {
       thresholds = [],
       unknown;
 
+      // 当定义域或者值域发生变化，则需要重新建立映射关系
   function rescale() {
     var i = 0, n = Math.max(1, range.length);
     thresholds = new Array(n - 1);
@@ -21,6 +22,7 @@ export default function quantile() {
     return isNaN(x = +x) ? unknown : range[bisect(thresholds, x)];
   }
 
+  // scale函数的逆函数
   scale.invertExtent = function(y) {
     var i = range.indexOf(y);
     return i < 0 ? [NaN, NaN] : [
