@@ -123,8 +123,8 @@ D3 的实现哲学中并不会针对每种图表进行设计，而是对一类�
 （26）Time Format(难度系数:4,重要性系数:3.5,内部依赖:<b>d3-time|d3-queue</b>)  
 受到 C 语言 strptime 和 strftime 函数的启发，实现的时间格式模块
 
-（27）Brush(难度系数:5,重要性系数:4.5,内部依赖:<b>d3-dispatch|d3-drag|d3-interpolate|d3-selection|d3-transition</b>)  
-刷子的作用是在图表中选取一个区域，用于后续的缩放操作。其原理是基于d3-selection来得到brushing覆盖过的DOM节点集合，并对DOM节点绑定brush事件对象
+（27）Brush(难度系数:4,重要性系数:4.5,内部依赖:<b>d3-dispatch|d3-drag|d3-interpolate|d3-selection|d3-transition</b>)  
+刷子的作用是在图表中选取一个区域，用于后续的缩放操作。其原理是基于d3-selection来得到brushing覆盖过的DOM节点集合，并对DOM节点绑定brush事件对象。brush动作三部曲：实时记录刷过的有效区间state.selection、不断调用redraw来重绘刷动覆盖层样式、不断分发brush事件，供监听函数处理(核心是重建scale中定义域和值域的映射关系)
 
 （28）Scale(难度系数:4.5,重要性系数:5,内部依赖:<b>d3-array|d3-collection|d3-format|d3-interpolate|d3-time|d3-time-format|d3-color</b>)  
 scale是图表能够正常显示的关键，是具有数学含义的映射关系，如果说format是面向人类的工具，则scale是图表内生的数学尺度。比例尺分为线性、非线性、序列、发散比例尺、量化比例尺等

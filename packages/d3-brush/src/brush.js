@@ -334,8 +334,10 @@ function brush(dim) {
             function tween(t) {
               state.selection = t === 1 && selection1 === null ? null : i(t);
               
-              
+              // 重新绘制在当前DOM容器下的刷动样式，包括覆盖层
               redraw.call(that);
+
+              // 刷动过程的事件分发，相应监听器处理逻辑
               emit.brush();
             }
            
@@ -361,6 +363,8 @@ function brush(dim) {
            
             // redraw
             redraw.call(that);
+
+            // 
             emit.start().brush().end();
           });
     }
@@ -512,11 +516,15 @@ function brush(dim) {
         shifting = signX && signY && keys && event.shiftKey,
         lockX,
         lockY,
+
+        // 针对鼠标坐标和触控点的统一
         pointer = event.touches ? toucher(event.changedTouches[0].identifier) : mouse,
         point0 = pointer(that),
         point = point0,
         emit = emitter(that, arguments, true).beforestart();
 
+        // 注意state.selection表示在当前图表区域brush的区间范围
+        // 与brush.dim.input()的差别
     if (type === "overlay") {
       if (selection) moving = true;
       state.selection = selection = [
@@ -556,23 +564,45 @@ function brush(dim) {
       dragDisable(event.view);
     }
 
+    // 阻止事件传播
     nopropagation();
+
+    // 中断选定DOM节点的动效，比如正在执行动效的DOM，因为新的一轮brush操作则取消动效
     interrupt(that);
+
+    // 刷动操作的样式绘制，让用户在视觉上感知到刷动过程。
+    // 实际上从数学意义上将并不需要可视化刷动过程，只需要对scale的映射关系重建即可
     redraw.call(that);
+
+    // 事件总线分发brush的"start"事件
     emit.start();
 
+    // brushing过程
     function moved() {
       var point1 = pointer(that);
+
+      // brush可以在X轴、Y轴，或者二维方向上进行，通过下面lockX/lockY来控制方位锁定
+      // 下面point[0]表示鼠标/触控点X坐标，point[1]表示Y坐标
+      // 因此如果X方向上坐标位移大于Y轴向，则可以锁定刷动主方向
       if (shifting && !lockX && !lockY) {
-        if (Math.abs(point1[0] - point[0]) > Math.abs(point1[1] - point[1])) lockY = true;
+        if (Math.abs(point1[0] - point[0]) > Math.abs(point1[1] - point[1])) 
+          lockY = true;
+
         else lockX = true;
       }
       point = point1;
       moving = true;
+
+      // 其实是鼠标/触控事件传播
       noevent();
+
+      // 真正开始刷动的逻辑
       move();
     }
 
+
+    // 在刷子不断移动过程中，需要实时更新刷子在图表中的覆盖层区间，即state.selection
+    // 同时还需要实时调用redraw来绘制刷动样式。
     function move() {
       var t;
 
@@ -582,8 +612,10 @@ function brush(dim) {
       switch (mode) {
         case MODE_SPACE:
         case MODE_DRAG: {
-          if (signX) dx = Math.max(W - w0, Math.min(E - e0, dx)), w1 = w0 + dx, e1 = e0 + dx;
-          if (signY) dy = Math.max(N - n0, Math.min(S - s0, dy)), n1 = n0 + dy, s1 = s0 + dy;
+          if (signX) 
+            dx = Math.max(W - w0, Math.min(E - e0, dx)), w1 = w0 + dx, e1 = e0 + dx;
+          if (signY) 
+            dy = Math.max(N - n0, Math.min(S - s0, dy)), n1 = n0 + dy, s1 = s0 + dy;
           break;
         }
         case MODE_HANDLE: {
@@ -622,26 +654,41 @@ function brush(dim) {
           || selection[0][1] !== n1
           || selection[1][0] !== e1
           || selection[1][1] !== s1) {
+
+        // 核心逻辑：brush三部曲——更新刷动区间、重绘刷动样式，以及分发刷动事件
         state.selection = [[w1, n1], [e1, s1]];
         redraw.call(that);
         emit.brush();
       }
     }
 
+    // brush动作结束，事件处理
     function ended() {
       nopropagation();
       if (event.touches) {
         if (event.touches.length) return;
-        if (touchending) clearTimeout(touchending);
-        touchending = setTimeout(function() { touchending = null; }, 500); // Ghost clicks are delayed!
+        if (touchending) 
+          clearTimeout(touchending);
+        touchending = setTimeout(function() { 
+          touchending = null; }, 500); // Ghost clicks are delayed!
       } else {
         dragEnable(event.view, moving);
+
+        // 注意下面参数null，表示对事件监听进行解绑
         view.on("keydown.brush keyup.brush mousemove.brush mouseup.brush", null);
       }
+
+      //
       group.attr("pointer-events", "all");
       overlay.attr("cursor", cursors.overlay);
-      if (state.selection) selection = state.selection; // May be set by brush.move (on start)!
-      if (empty(selection)) state.selection = null, redraw.call(that);
+      if (state.selection) 
+        selection = state.selection; // May be set by brush.move (on start)!
+      if (empty(selection)) 
+
+        // 刷动操作结束，则重置刷动区间为null，从而取消覆盖层样式
+        state.selection = null, redraw.call(that);
+      
+      // 分发brush结束事件
       emit.end();
     }
 
