@@ -2,6 +2,7 @@ import {packEnclose} from "./siblings.js";
 import {optional} from "../accessors.js";
 import constant, {constantZero} from "../constant.js";
 
+// 默认采用数据对象的value作为半径表征
 function defaultRadius(d) {
   return Math.sqrt(d.value);
 }
@@ -10,6 +11,8 @@ export default function() {
   var radius = null,
       dx = 1,
       dy = 1,
+
+      // 默认圆与圆之间不填充
       padding = constantZero;
 
   function pack(root) {
@@ -42,6 +45,7 @@ export default function() {
   return pack;
 }
 
+// 
 function radiusLeaf(radius) {
   return function(node) {
     if (!node.children) {
@@ -50,6 +54,7 @@ function radiusLeaf(radius) {
   };
 }
 
+// padding表示圆间的填充空间，用于美化图表。使得图表不至于太拥挤
 function packChildren(padding, k) {
   return function(node) {
     if (children = node.children) {
@@ -59,6 +64,8 @@ function packChildren(padding, k) {
           r = padding(node) * k || 0,
           e;
 
+      // 先将每个圆的半径扩大，然后经过pack打包后，所有圆心坐标发生变化
+      // 并返回最大外围圆半径；最后恢复圆半径，体现真实的关系
       if (r) for (i = 0; i < n; ++i) children[i].r += r;
       e = packEnclose(children);
       if (r) for (i = 0; i < n; ++i) children[i].r -= r;

@@ -1,8 +1,12 @@
 import enclose from "./enclose.js";
 
+// 在二维空间上放置三个圆，使得作图效果上更加紧凑和美化
+// 即让三个圆两两外切
 function place(b, a, c) {
   var dx = b.x - a.x, x, a2,
       dy = b.y - a.y, y, b2,
+
+      // a\b圆心距的平方
       d2 = dx * dx + dy * dy;
   if (d2) {
     a2 = a.r + c.r, a2 *= a2;
@@ -19,16 +23,20 @@ function place(b, a, c) {
       c.y = a.y + x * dy + y * dx;
     }
   } else {
+    // 如果a\b同心圆，则向圆a右边c.r半径位置放置圆c，从而三个圆水平一致
     c.x = a.x + c.r;
     c.y = a.y;
   }
 }
 
+// 如果两个圆半径之和大于圆心距，则说明两个圆不相离。即可能是相交或者包含
 function intersects(a, b) {
   var dr = a.r + b.r - 1e-6, dx = b.x - a.x, dy = b.y - a.y;
   return dr > 0 && dr * dr > dx * dx + dy * dy;
 }
 
+// 根据作图法可知，dy、dy偏向于半径较小的圆。
+// 其目的在于绘图时尽量让较大的圆靠近外围圆圆弧附近，增加美化效果
 function score(node) {
   var a = node._,
       b = node.next._,
@@ -38,6 +46,7 @@ function score(node) {
   return dx * dx + dy * dy;
 }
 
+// 同层级上兄弟节点的前后关系
 function Node(circle) {
   this._ = circle;
   this.next = null;
@@ -45,22 +54,26 @@ function Node(circle) {
 }
 
 export function packEnclose(circles) {
+
+  // 如果没有任何圆，则直接返回
   if (!(n = circles.length)) return 0;
 
   var a, b, c, n, aa, ca, i, j, k, sj, sk;
 
-  // Place the first circle.
+  // 修改第一个圆的坐标点，在绘制时将该圆绘制到坐标原点。
+  // 如果只有一个圆，则返回圆a在X轴右边交点
   a = circles[0], a.x = 0, a.y = 0;
   if (!(n > 1)) return a.r;
 
-  // Place the second circle.
+  // 注意下面的代码，作用是将圆a、圆b在X轴外切排列。其中圆a在X轴左边
+  // 如果只有两个圆，则返回最右边的圆b在X轴右边交点
   b = circles[1], a.x = -b.r, b.x = a.r, b.y = 0;
   if (!(n > 2)) return a.r + b.r;
 
-  // Place the third circle.
+  // 三个圆相互外切
   place(b, a, c = circles[2]);
 
-  // Initialize the front-chain using the first three circles a, b and c.
+  // 三个圆处于同一级，则通过指针设置兄弟节点关系
   a = new Node(a), b = new Node(b), c = new Node(c);
   a.next = c.previous = b;
   b.next = a.previous = c;
@@ -68,6 +81,7 @@ export function packEnclose(circles) {
 
   // Attempt to place each remaining circle…
   pack: for (i = 3; i < n; ++i) {
+    // 
     place(a._, b._, c = circles[i]), c = new Node(c);
 
     // Find the closest intersecting circle on the front-chain, if any.
@@ -112,6 +126,9 @@ export function packEnclose(circles) {
   return c.r;
 }
 
+
+// circles表示最初的圆集合，注意circle元素对象包含x坐标分量、y坐标分量和圆半径参数r
+// 经过包含封装后，返回具有层级结构的圆集合
 export default function(circles) {
   packEnclose(circles);
   return circles;
