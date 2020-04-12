@@ -1,3 +1,5 @@
+
+// 与dice操作类似，只不过是在矩形的Y轴向按照子节点的value总占比来切割
 export default function(parent, x0, y0, x1, y1) {
   var nodes = parent.children,
       node,

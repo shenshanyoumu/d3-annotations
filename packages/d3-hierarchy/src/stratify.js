@@ -34,7 +34,7 @@ export default function() {
 
     // 注意下面将flatten的数组转换为map结构，其中需要注意的是
     // 如果flatten数组中元素存在相同的key或者原型链关键字，则表示这些数据对最终层级存在异常，
-    // 因此处理为ambiguous
+    // 因此处理为ambiguous,并在构建层级树时抛错异常
     for (i = 0; i < n; ++i) {
       d = data[i], node = nodes[i] = new Node(d);
       if ((nodeId = id(d, i, data)) != null && (nodeId += "")) {
