@@ -5,6 +5,7 @@ import {phi, squarifyRatio} from "./squarify.js";
 export default (function custom(ratio) {
 
   function resquarify(parent, x0, y0, x1, y1) {
+    // 如果parent节点已经进行了squarify
     if ((rows = parent._squarify) && (rows.ratio === ratio)) {
       var rows,
           row,
@@ -18,12 +19,17 @@ export default (function custom(ratio) {
       while (++j < m) {
         row = rows[j], nodes = row.children;
         for (i = row.value = 0, n = nodes.length; i < n; ++i) row.value += nodes[i].value;
-        if (row.dice) treemapDice(row, x0, y0, x1, y0 += (y1 - y0) * row.value / value);
-        else treemapSlice(row, x0, y0, x0 += (x1 - x0) * row.value / value, y1);
+        if (row.dice) 
+          treemapDice(row, x0, y0, x1, 
+            y0 += (y1 - y0) * row.value / value);
+
+        else treemapSlice(row, x0, y0,
+           x0 += (x1 - x0) * row.value / value, y1);
         value -= row.value;
       }
     } else {
-      parent._squarify = rows = squarifyRatio(ratio, parent, x0, y0, x1, y1);
+      parent._squarify = rows = 
+      squarifyRatio(ratio, parent, x0, y0, x1, y1);
       rows.ratio = ratio;
     }
   }
