@@ -133,7 +133,7 @@ scale是图表能够正常显示的关键，是具有数学含义的映射关系
 对选择的 DOM 集进行渐变动画的模块
 
 （30）Hierarchies(难度系数:4.5,重要性系数:4.5,内部依赖:<b>d3-array|d3-dsv|d3-queue|d3-random</b>)  
-对具有层次结构图表的一种布局算法，现实中 Tree 图、TreeMap、Packing 图等都可以使用这种布局变种,其中计算circle-packing的圆心坐标算法比较复杂，要让所有圆不会相交重叠。treemap在webpack生成模块体积图时使用
+对具有层次结构图表的一种布局算法，现实中 Tree 图、TreeMap、Packing 图等都可以使用这种布局变种,其中计算circle-packing的圆心坐标算法比较复杂，要让所有圆不会相交重叠。treemap在webpack生成模块体积图时使用,注意treeMap与quardtree的差别，quardTree四叉树生成相当而言要简单些
 
 （31）Force(难度系数:4,重要性系数:4,内部依赖:<b>d3-collection|d3-dispatch|d3-quadtree|d3-timer</b>) 
 基于速度的 Verlet 积分实现的力导向图，这种布局算法在模拟具有强度信息的关系网很有效

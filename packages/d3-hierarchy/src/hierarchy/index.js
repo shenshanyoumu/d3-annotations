@@ -42,7 +42,8 @@ export default function hierarchy(data, children) {
     }
   }
 
-  // 
+  // 从root节点开始，计算层级中每个节点相对叶子节点的高度。
+  // 注意height相对叶子节点；depth相对root节点
   return root.eachBefore(computeHeight);
 }
 

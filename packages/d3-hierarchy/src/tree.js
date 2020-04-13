@@ -1,16 +1,22 @@
 import {Node} from "./hierarchy/index.js";
 
+
+// separation函数用于分离 具有neighboring关系的叶子节点。
+// 注意neighboring关系的叶子节点可能是兄弟节点，也可能是远方亲戚节点
+// 下面用于标记布局器中两个相邻节点的"血缘"关系
 function defaultSeparation(a, b) {
   return a.parent === b.parent ? 1 : 2;
 }
 
 
-// 节点v如果存在孩子节点，则返回最左边孩子节点；否则返回当前节点的thread
+// 如果存在孩子节点则返回最左边孩子，否则返回节点v的线索化前驱节点
+// 注意针对树的中序、后序和先序遍历，其节点v的前驱节点是不一样的
 function nextLeft(v) {
   var children = v.children;
   return children ? children[0] : v.t;
 }
 
+// 同理得到节点的最右边孩子节点，或者后继节点
 function nextRight(v) {
   var children = v.children;
   return children ? children[children.length - 1] : v.t;
@@ -18,7 +24,11 @@ function nextRight(v) {
 
 // Shifts the current subtree rooted at w+. This is done by increasing
 // prelim(w+) and mod(w+) by shift.
+
+// wp.i表示节点wp在所有兄弟节点中的索引;wm表示节点wm在所有兄弟节点中的索引
 function moveSubtree(wm, wp, shift) {
+
+  // 
   var change = shift / (wp.i - wm.i);
   wp.c -= change;
   wp.s += shift;
@@ -44,24 +54,27 @@ function executeShifts(v) {
   }
 }
 
-// If vi-’s ancestor is a sibling of v, returns vi-’s ancestor. Otherwise,
-// returns the specified (default) ancestor.
+// 如果vim节点的某个祖先节点与v节点是兄弟节点，则返回vim的该祖先节点
+// 否则返回默认的祖先节点
 function nextAncestor(vim, v, ancestor) {
   return vim.a.parent === v.parent ? vim.a : ancestor;
 }
 
+// 树节点对象,下面参数的含义呢？
 function TreeNode(node, i) {
-  this._ = node;
-  this.parent = null;
+  this._ = node; //存放层级结构中的一个节点，该节点包含depth、height、parent、children和data等属性
+  this.parent = null; //节点的父节点和孩子节点
   this.children = null;
-  this.A = null; // 默认祖先节点
-  this.a = this; // ancestor
-  this.z = 0; // prelim
-  this.m = 0; // mod
-  this.c = 0; // change
-  this.s = 0; // shift
-  this.t = null; // thread
-  this.i = i; // number
+  this.A = null; // default ancestor 默认祖先节点
+  this.a = this; // ancestor 某个祖先节点
+  this.z = 0; // prelim。在处理tree布局时，用于节点在画布中绘制坐标的确认参数
+  this.m = 0; // mod，表示节点发生偏移后，相对于原本位置的偏移量。即modified
+
+  this.c = 0; // change .c和.s也是精细化控制节点的布局位置的参数
+  this.s = 0; // shift 
+  
+  this.t = null; // 二叉树的线索化
+  this.i = i; // 表示在兄弟节点中的索引。根节点i为0
 }
 
 TreeNode.prototype = Object.create(Node.prototype);
@@ -137,26 +150,51 @@ export default function() {
   // applied recursively to the children of v, as well as the function
   // APPORTION. After spacing out the children by calling EXECUTE SHIFTS, the
   // node v is placed to the midpoint of its outermost children.
+
+  // 为了初步计算节点v的X轴坐标分量，需要先遍历其孩子节点，根据孩子节点的位置来设置v的X轴坐标分量
+  // tree默认是垂直布局，设置x轴分量后节点v
   function firstWalk(v) {
+    // 当前节点v的孩子节点和兄弟节点(包括自己)
     var children = v.children,
         siblings = v.parent.children,
+
+        // 如果当前节点v在所有兄弟节点中不是拍第一位，则返回其前面的兄弟节点w
         w = v.i ? siblings[v.i - 1] : null;
+    
+    // 
     if (children) {
       executeShifts(v);
+
+      // 通过两个端点孩子节点的z参数来确定当前v节点的z定位，tree布局器通过z来确定节点v的坐标点
       var midpoint = (children[0].z + children[children.length - 1].z) / 2;
+
+      // 如果当前节点v前面存在兄弟节点，则通过自定义的separation函数来重新调整v.z的值
+      // 这个主要用于在图表绘制时，确定两个节点的间距
       if (w) {
         v.z = w.z + separation(v._, w._);
+
+        // v.m表示节点v的新位置与原本位置之间的修改量
         v.m = v.z - midpoint;
       } else {
+
+        // 如果节点v不存在兄弟节点，或者节点v是兄弟节点中第一个，则直接设置z值
+        // 表示在图表绘制中，节点v的坐标只受到孩子节点布局影响
         v.z = midpoint;
       }
     } else if (w) {
+
+      // 如果节点v没有孩子节点，且前面存在兄弟节点，则通过调整与前面兄弟节点的z参数来实现
+      // 节点v的绘制坐标定位
       v.z = w.z + separation(v._, w._);
     }
+
+    // 
     v.parent.A = apportion(v, w, v.parent.A || siblings[0]);
   }
 
-  // Computes all real x-coordinates by summing up the modifiers recursively.
+  // 通过节点v的父节点坐标偏移量m，以及节点v本身相对孩子节点的布局定位z参数
+  // 计算得到v节点在最终布局中x坐标分量，以及v的坐标偏移量m
+  // 本质上，即父节点发生的坐标偏移，则子节点应该一起移动。不然画布link存在扭曲
   function secondWalk(v) {
     v._.x = v.z + v.parent.m;
     v.m += v.parent.m;
@@ -212,6 +250,7 @@ export default function() {
     return ancestor;
   }
 
+  // 垂直绘制的一棵树中节点的坐标计算。
   function sizeNode(node) {
     node.x *= dx;
     node.y = node.depth * dy;
@@ -221,12 +260,16 @@ export default function() {
     return arguments.length ? (separation = x, tree) : separation;
   };
 
+  // tree的布局尺寸，是在绘制时tree占据的空间范围
   tree.size = function(x) {
-    return arguments.length ? (nodeSize = false, dx = +x[0], dy = +x[1], tree) : (nodeSize ? null : [dx, dy]);
+    return arguments.length ? (nodeSize = false,
+       dx = +x[0], dy = +x[1], tree) : (nodeSize ? null : [dx, dy]);
   };
 
+  // 
   tree.nodeSize = function(x) {
-    return arguments.length ? (nodeSize = true, dx = +x[0], dy = +x[1], tree) : (nodeSize ? [dx, dy] : null);
+    return arguments.length ? (nodeSize = true,
+       dx = +x[0], dy = +x[1], tree) : (nodeSize ? [dx, dy] : null);
   };
 
   return tree;
