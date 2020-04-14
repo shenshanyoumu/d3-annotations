@@ -1,4 +1,4 @@
-// 如果两个节点的父节点指向同一地址，则表示两节点为兄弟节点
+// 用于分离两个布局图上的相邻节点，注意相邻节点可能是兄弟节点，也可能不是因此需要区别
 function defaultSeparation(a, b) {
   return a.parent === b.parent ? 1 : 2;
 }
@@ -50,7 +50,8 @@ export default function() {
     var previousNode,
         x = 0;
 
-    // First walk, computing the initial x & y values.
+    // 第一次迭代： 按照从下到上层级遍历结构对象
+    // 用于初始化每个节点node相对于孩子节点的坐标布局
     root.eachAfter(function(node) {
       var children = node.children;
       if (children) {
@@ -63,16 +64,26 @@ export default function() {
       }
     });
 
+    //  整个cluster结构中，得到最左边叶子节点和最右边叶子节点，用于约束布局范围
+    // 其他节点的布局坐标显然都应该在这个范围内
     var left = leafLeft(root),
         right = leafRight(root),
+
+
         x0 = left.x - separation(left, right) / 2,
         x1 = right.x + separation(right, left) / 2;
 
-    // Second walk, normalizing x & y to the desired size.
+    // 第二轮迭代，将cluster中的节点坐标归一化到[dx,dy]区间内
+    // 这也是真正能够绘制到图表上的坐标位置
     return root.eachAfter(nodeSize ? function(node) {
+      // 当node为root节点时，则可知root节点被放置在[0,0]坐标位置
+
+      // 注意下面cluster的形态是根节点在原点，根据svg坐标系特点，其他node节点逐层向上添加
       node.x = (node.x - root.x) * dx;
       node.y = (root.y - node.y) * dy;
     } : function(node) {
+
+      // dx是整个cluster图表的宽度，下面根据比例关系计算最后布局中各个点的坐标
       node.x = (node.x - x0) / (x1 - x0) * dx;
       node.y = (1 - (root.y ? node.y / root.y : 1)) * dy;
     });
@@ -83,13 +94,13 @@ export default function() {
     return arguments.length ? (separation = x, cluster) : separation;
   };
 
-  // 设置cluster布局图的宽高尺寸
+  // 设置cluster布局的宽高尺寸
   cluster.size = function(x) {
     return arguments.length ? (nodeSize = false,
        dx = +x[0], dy = +x[1], cluster) : (nodeSize ? null : [dx, dy]);
   };
 
-  // 设置cluster图表中节点的尺寸
+  // 如果设置了cluster布局的节点尺寸[dx,dy]，则root节点被放置在[0,0]坐标点
   cluster.nodeSize = function(x) {
     return arguments.length ? (nodeSize = true, dx = +x[0], dy = +x[1], cluster) : (nodeSize ? [dx, dy] : null);
   };
