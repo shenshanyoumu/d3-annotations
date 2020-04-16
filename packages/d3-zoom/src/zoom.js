@@ -8,14 +8,17 @@ import ZoomEvent from "./event.js";
 import {Transform, identity} from "./transform.js";
 import noevent, {nopropagation} from "./noevent.js";
 
-// Ignore right-click, since that should open the context menu.
+// 与d3-brush一样，需要忽略CTRL键和鼠标右键
 function defaultFilter() {
   return !event.ctrlKey && !event.button;
 }
 
+// 图表中默认可以进行zoom的区间范围
 function defaultExtent() {
   var e = this;
   if (e instanceof SVGElement) {
+
+    // 表示svg对象
     e = e.ownerSVGElement || e;
     if (e.hasAttribute("viewBox")) {
       e = e.viewBox.baseVal;
@@ -26,23 +29,28 @@ function defaultExtent() {
   return [[0, 0], [e.clientWidth, e.clientHeight]];
 }
 
+// _zoom表示一个transform对象，identity表示不进行zoom操作
 function defaultTransform() {
   return this.__zoom || identity;
 }
 
+// 对鼠标滚轮Delta的控制，鼠标滚轮来实现缩放
 function defaultWheelDelta() {
   return -event.deltaY * (event.deltaMode === 1 ? 0.05 : event.deltaMode ? 1 : 0.002);
 }
 
+// 判断当前设备或者DOM规范是否支持触控能力
 function defaultTouchable() {
   return navigator.maxTouchPoints || ("ontouchstart" in this);
 }
 
+// 
 function defaultConstrain(transform, extent, translateExtent) {
   var dx0 = transform.invertX(extent[0][0]) - translateExtent[0][0],
       dx1 = transform.invertX(extent[1][0]) - translateExtent[1][0],
       dy0 = transform.invertY(extent[0][1]) - translateExtent[0][1],
       dy1 = transform.invertY(extent[1][1]) - translateExtent[1][1];
+
   return transform.translate(
     dx1 > dx0 ? (dx0 + dx1) / 2 : Math.min(0, dx0) || Math.max(0, dx1),
     dy1 > dy0 ? (dy0 + dy1) / 2 : Math.min(0, dy0) || Math.max(0, dy1)
@@ -66,6 +74,8 @@ export default function() {
       wheelDelay = 150,
       clickDistance2 = 0;
 
+
+      // 与d3-brush模块一样，d3屏蔽底层事件实现对外提供统一的事件类型。
   function zoom(selection) {
     selection
         .property("__zoom", defaultTransform)
@@ -82,6 +92,8 @@ export default function() {
 
   zoom.transform = function(collection, transform, point) {
     var selection = collection.selection ? collection.selection() : collection;
+
+    // 选择集对象新增一个内部属性，用于存放当前的变换操作；与d3-brush模块一样，_brush内部属性
     selection.property("__zoom", defaultTransform);
     if (collection !== selection) {
       schedule(collection, transform, point);
@@ -95,6 +107,7 @@ export default function() {
     }
   };
 
+  // 对选择集应用缩放处理
   zoom.scaleBy = function(selection, k, p) {
     zoom.scaleTo(selection, function() {
       var k0 = this.__zoom.k,
@@ -175,6 +188,8 @@ export default function() {
     return (!clean && that.__zooming) || new Gesture(that, args);
   }
 
+
+  // this.emit由d3-dispatch模块分发事件，由监听该事件类型的事件侦听函数处理
   function Gesture(that, args) {
     this.that = that;
     this.args = args;
