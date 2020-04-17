@@ -9,10 +9,12 @@ export function Transform(k, x, y) {
 Transform.prototype = {
   constructor: Transform,
 
-  // 
+  // 缩放变换
   scale: function(k) {
     return k === 1 ? this : new Transform(this.k * k, this.x, this.y);
   },
+
+  // 坐标平移逻辑
   translate: function(x, y) {
     return x === 0 & y === 0 ? this : new Transform(this.k, this.x + this.k * x, this.y + this.k * y);
   },
@@ -36,6 +38,7 @@ Transform.prototype = {
   invert: function(location) {
     return [(location[0] - this.x) / this.k, (location[1] - this.y) / this.k];
   },
+
   // 计算变换前的X分量坐标，参数x为变换后的坐标X轴分量
   invertX: function(x) {
     return (x - this.x) / this.k;
@@ -54,7 +57,7 @@ Transform.prototype = {
     return y.copy().domain(y.range().map(this.invertY, this).map(y.invert, y));
   },
 
-  // 转换为绘制命令字符串，下面的字符串可以在DOM规范下执行
+  // 转换为DOM变换动作命令字符串，下面的字符串可以在DOM规范下执行
   toString: function() {
     return "translate(" + this.x + "," + this.y + ") scale(" + this.k + ")";
   }
@@ -64,6 +67,9 @@ export var identity = new Transform(1, 0, 0);
 
 transform.prototype = Transform.prototype;
 
+// 如果当前node节点对象本身没有挂载zoom属性对象，则迭代祖先节点，
+// 如果所有祖先节点都没有zoom对象，则返回identity，表示不进行任何zoom操作
+// 不然特定祖先节点挂载的__zoom变换对象
 export default function transform(node) {
   while (!node.__zoom) if (!(node = node.parentNode)) return identity;
   return node.__zoom;
