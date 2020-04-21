@@ -139,7 +139,7 @@ scale是图表能够正常显示的关键，是具有数学含义的映射关系
 基于速度的 Verlet 积分实现的力导向图，这种布局算法在模拟具有强度信息的关系网很有效
 
 （32）Zoom(难度系数:4,重要性系数:4.5,内部依赖:<b>d3-dispatch|d3-drag|d3-interpolate|d3-selection|d3-transition</b>)  
-对 SVG 图表、HTML 图表或者 canvas 图表进行平移/缩放操作
+对 SVG 图表、HTML 图表或者 canvas 图表进行平移/缩放操作,在形态上同属于d3-brush模块提供的能力，本质上都是动态修改scale的定义域和值域映射关系，从而驱动图表的变化
 
 
 

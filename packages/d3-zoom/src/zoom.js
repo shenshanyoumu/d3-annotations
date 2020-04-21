@@ -322,7 +322,7 @@ export default function() {
         p = mouse(this),
         x0 = event.clientX,
         y0 = event.clientY;
-
+    
     dragDisable(event.view);
     nopropagation();
     g.mouse = [p, this.__zoom.invert(p)];
