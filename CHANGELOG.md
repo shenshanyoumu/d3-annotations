@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.1](https://github.com/d3/d3/compare/v0.1.0...v0.1.1) (2020-04-21)
+
+
+### Features
+
+* 未对geo和voronoi这两个复杂模块进行说明 ([f5c67f9](https://github.com/d3/d3/commit/f5c67f946de945991ca4a0def769528929be71b6))
+
 ## 0.1.0 (2020-04-11)
 
 
