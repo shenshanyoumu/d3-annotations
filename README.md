@@ -136,7 +136,7 @@ scale是图表能够正常显示的关键，是具有数学含义的映射关系
 对具有层次结构图表的一种布局算法，现实中 Tree 图、TreeMap、Packing 图等都可以使用这种布局变种,其中计算circle-packing的圆心坐标算法比较复杂，要让所有圆不会相交重叠。treemap在webpack生成模块体积图时使用,注意treeMap与quardtree的差别，quardTree四叉树生成相当而言要简单些
 
 （31）Force(难度系数:4,重要性系数:4,内部依赖:<b>d3-collection|d3-dispatch|d3-quadtree|d3-timer</b>) 
-基于速度的 Verlet 积分实现的力导向图，这种布局算法在模拟具有强度信息的关系网很有效
+基于速度的 Verlet 积分实现的力导向图，这种布局算法在模拟具有强度信息的关系网很有效。在经典运行学中，只要知道每个时间截面上刚体的位置和速度就能得到刚体的运动学全部信息。在实际应用中，不可能在每个tick采集刚体的位置和速度，因此可以引入时间t变量来模拟。当然对于非匀速运动，时间t的周期越长造成的坐标误差越大。注意alpha表示刚体运动速度在衰减过程中的迭代因子，可以联想机器学习中的learning rate、velocity表示刚体初速度，strength用于表征刚体速度向量的增量。
 
 （32）Zoom(难度系数:4,重要性系数:4.5,内部依赖:<b>d3-dispatch|d3-drag|d3-interpolate|d3-selection|d3-transition</b>)  
 对 SVG 图表、HTML 图表或者 canvas 图表进行平移/缩放操作,在形态上同属于d3-brush模块提供的能力，本质上都是动态修改scale的定义域和值域映射关系，从而驱动图表的变化
