@@ -2,6 +2,7 @@ import constant from "./constant";
 import jiggle from "./jiggle";
 import {map} from "d3-collection";
 
+// link对象包含source、target节点
 function index(d) {
   return d.index;
 }
