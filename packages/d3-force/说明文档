@@ -1,0 +1,74 @@
+d3-force模块
+    该模块采用velocity Verlet numberical integrator实现，用于对粒子系统进行力学仿真。
+但是该仿真模型还是很简单：
+    (1)假设时间t的离散化，每个时间片段为1;
+    (2)粒子系统中每个粒子的质量为1
+
+    通过上面的假设，在一个特定粒子上施加大小为F的力，可以转换为粒子的运行学过程，即给定初速度V，
+以及离散化的时间序列t，在恒定的加速度a上的运动变化。
+
+仿真器工作原理
+    先创建一组粒子对象，并且将每个粒子分配特定的力学参数。仿真器启动后根据内部的timer
+进行tick事件分发，仿真器模拟逻辑处理每个节点的位置、速度状态，并将当前tick的静力学状态通过
+底层图形系统比如canvas/svg进行渲染
+
+API说明
+
+Simulation-仿真器
+(1)d3.forceSimulation([nodes])
+仿真器创建时，传递一个没有任何力学效果的粒子集合。创建成功后，仿真器自动开始进行模拟tick动作，批量更新
+每一个切面状态。simulation.on可以监听仿真器的tick事件，从而开发者自定义监听处理动作
+
+(2)simulation.restart()
+重置仿真器内部任务timer并返回仿真器对象。注意simulation.alphaTarget和simulation.alpha用于控制粒子速度
+的衰减程度，相当于物理系统中的加速度α，但是注意alpha参数不一定是恒定的。
+
+(3)simulation.tick([iterations])
+iterations数组中每个元素表示一轮仿真的迭代次数，每次迭代alpha=alpha+(alphaTarget-alpha)*alphaDecay。
+然后为每个注册到仿真器上的force对象传递新的alpha参数。同时每个粒子的速度向量通过velocityDecay进行衰减。
+最终速度由影响粒子在特定tick截面的位置坐标
+
+(4)simulation.nodes([nodes])
+初始化仿真器时可以传递一组节点集合，每个节点包含初始位置和初速度，也可能包含力学F效应。每个节点参数包含
+坐标向量[x,y]和速度向量[vx,vy]。速度和位置向量会被施加给节点的力F和仿真器修改。为了将某个节点固定在坐标系
+某个位置，需要给节点对象添加额外的属性[fx,fy]
+
+
+(5)simulation.alpha([alpha])
+将alpha映射到[0,1]区间，如果没有传递alpha则默认值为1;alpha用于控制仿真器timer的迭代和停机过程，当经过
+一系列tick后例子系统中alpha会衰减到一个阈值
+
+(6)simulation.alphaDecay([decay])
+decay用于控制alpha的衰减速率，alpha decay用于控制从当前alpha到alphaTarget的插值点数目，插值点越多则动效
+越精细但是tick数量更多更耗时，类似机器学习中的learning rate。
+
+(7)simulation.velocityDecay([decay])
+根据牛顿力学定理，物体在没有力的作用下要么匀速要么静止。因此在仿真系统中，让具有速度的粒子最终能够静止则意味着
+对这些粒子施加了力F。如果alpha decay很小，则相应的velocity decay也会很小。
+
+(8)simulation.force(name[,force])
+force对象对运动中的粒子产生力学作用，从而影响粒子的运动学特征。
+
+(9)simulation.on(typenames,[listener])
+仿真器内部包含一个timer，timer的每一轮tick过程都会分发事件给事件监听函数。
+
+
+Force函数
+force函数用于修改节点的位置和速度向量，在物理仿真中force可以模拟重力效应和静电效应，甚至具有一种范围可约束的
+力学效应，比如将特定节点限定在特定空间范围/让粒子间保持一定的最小距离等
+(1)foce(alpha)
+最精细的控制方式是针对粒子系统中每个粒子施加不同的force属性，当然也存在一组粒子被同一个force影响。d3.forceLink
+可以控制Links对象的伸缩动效等
+
+centering
+在粒子系统趋于稳定态时，通过迭代调整每个粒子的坐标来实现粒子系统重心与给定中心点[x,y]重合
+
+collision
+为了防止粒子系统中存在粒子重叠，通过给粒子施加一种防碰撞的力学特性来避免。具体做法是迭代计算粒子间的半径距离
+是否符合设置的阈值范围
+
+
+
+
+
+
