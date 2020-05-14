@@ -37,6 +37,8 @@ export default function(radius) {
       for (i = 0; i < n; ++i) {
         node = nodes[i];
         ri = radii[node.index], ri2 = ri * ri;
+
+        // 在仿真器的一个tick阶段修改节点的坐标位置
         xi = node.x + node.vx;
         yi = node.y + node.vy;
 
@@ -52,6 +54,9 @@ export default function(radius) {
           var x = xi - data.x - data.vx,
               y = yi - data.y - data.vy,
               l = x * x + y * y;
+
+          // 如果存在节点的重叠现象，则需要通过strength来
+          // 修改节点的速度向量，进而改变节点的位置保持安全距离
           if (l < r * r) {
             if (x === 0) x = jiggle(), l += x * x;
             if (y === 0) y = jiggle(), l += y * y;
