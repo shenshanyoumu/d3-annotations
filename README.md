@@ -79,7 +79,7 @@ D3 的 Paths 模块定义的 API 与 SVG 的 API 几乎一一对应，方便开�
 （11）Timer(难度系数:4.5,重要性系数:4.5,内部依赖:<b>独立模块</b>)  
 用于处理并发动画的高效计时队列,注意与上面d3-queue的区别。d3-timer对动画帧的渲染进行计时，超时后触发一组动画任务的执行
 
-（12）Voronoi(难度系数:5,重要性系数:3,内部依赖:<b>独立模块</b>)  
+（12）Voronoi/delaunay(难度系数:5,重要性系数:3,内部依赖:<b>独立模块</b>)  
 针对给定的点计算维诺图，这是一种复杂的图表结构。目前该模块建议废弃，并使用<b>d3-delaunay</b>模块，d3-delaunay模块基于[Delaunator](https://github.com/mapbox/delaunator)。d3-delaunay模块构建Delaunay三角剖分的速度比d3-voronoi快5-10倍。
 
 （13）collections(难度系数:3.5,重要性系数:4.5,内部依赖:<b>d3-array</b>)  
@@ -140,7 +140,6 @@ scale是图表能够正常显示的关键，是具有数学含义的映射关系
 
 （32）Zoom(难度系数:4,重要性系数:4.5,内部依赖:<b>d3-dispatch|d3-drag|d3-interpolate|d3-selection|d3-transition</b>)  
 对 SVG 图表、HTML 图表或者 canvas 图表进行平移/缩放操作,在形态上同属于d3-brush模块提供的能力，本质上都是动态修改scale的定义域和值域映射关系，从而驱动图表的变化
-
 
 
 
