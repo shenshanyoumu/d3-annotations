@@ -3,7 +3,7 @@ import number from "./number";
 /**
  * 随机变量数组求解方差
  * @param {*} values 样本集合
- * @param {*} valueof 可选的求值函数，用于将样本空间从非数值型转化到数值型
+ * @param {*} valueof 可选的求值函数，用于将样本空间转化为可计算的数值空间
  */
 export default function(values, valueof) {
   var n = values.length,
@@ -19,13 +19,13 @@ export default function(values, valueof) {
       if (!isNaN(value = number(values[i]))) {
 
         /**
-         * 平滑均值的巧妙算法，
+         * TODO: 平滑均值的巧妙算法，
          */
         delta = value - mean; 
         mean += delta / ++m;
 
         /** 
-         * 求解振幅平方和的计算过程
+         * 求解平方和的计算过程
          */
         sum += delta * (value - mean);
       }
@@ -34,6 +34,7 @@ export default function(values, valueof) {
 
   else {
     while (++i < n) {
+      /** 注意下面valueof接受三个参数，类似map、forEach等函子 */
       if (!isNaN(value = number(valueof(values[i], i, values)))) {
         delta = value - mean;
         mean += delta / ++m;

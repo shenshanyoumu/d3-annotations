@@ -1,5 +1,5 @@
 /**
- * 根据给定的数组，计算该数组表示的范围
+ * 根据给定的数组，计算该数组表示的数值范围
  * @param {*} values 
  * @param {*} valueof 
  */
@@ -11,10 +11,10 @@ export default function(values, valueof) {
       max;
 
   if (valueof == null) {
-    while (++i < n) { // Find the first comparable value.
+    while (++i < n) {
       if ((value = values[i]) != null && value >= value) {
         min = max = value;
-        while (++i < n) { // Compare the remaining values.
+        while (++i < n) {
           if ((value = values[i]) != null) {
             if (min > value) min = value;
             if (max < value) max = value;
@@ -25,10 +25,10 @@ export default function(values, valueof) {
   }
 
   else {
-    while (++i < n) { // Find the first comparable value.
+    while (++i < n) { 
       if ((value = valueof(values[i], i, values)) != null && value >= value) {
         min = max = value;
-        while (++i < n) { // Compare the remaining values.
+        while (++i < n) { 
           if ((value = valueof(values[i], i, values)) != null) {
             if (min > value) min = value;
             if (max < value) max = value;

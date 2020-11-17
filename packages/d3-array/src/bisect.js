@@ -2,7 +2,8 @@ import ascending from "./ascending";
 import bisector from "./bisector";
 
 /**
- * 基于升序算子的二分排序器
+ * 注意二分查找的数组一定有序，并且根据上下文可推论
+ * 二分数组升序
  */
 var ascendingBisect = bisector(ascending);
 export var bisectRight = ascendingBisect.right;

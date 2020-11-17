@@ -10,10 +10,11 @@ export default function(arrays) {
       merged,
       array;
 
+  // 计算二维数组元素个数，并保存到变量j中
   while (++i < n) j += arrays[i].length;
   merged = new Array(j);
 
-  /** 从右到左的二维数组赋值 */
+  /** 从下到上，从右到左依次赋值 */
   while (--n >= 0) {
     array = arrays[n];
     m = array.length;
