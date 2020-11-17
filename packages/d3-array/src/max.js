@@ -5,10 +5,11 @@ export default function(values, valueof) {
       max;
 
   if (valueof == null) {
-    while (++i < n) { // Find the first comparable value.
+    /** 之所以双重循环，是为了确保values中存在可比较的元素 */
+    while (++i < n) { 
       if ((value = values[i]) != null && value >= value) {
         max = value;
-        while (++i < n) { // Compare the remaining values.
+        while (++i < n) {
           if ((value = values[i]) != null && value > max) {
             max = value;
           }
@@ -18,10 +19,11 @@ export default function(values, valueof) {
   }
 
   else {
-    while (++i < n) { // Find the first comparable value.
+    while (++i < n) { 
       if ((value = valueof(values[i], i, values)) != null && value >= value) {
         max = value;
-        while (++i < n) { // Compare the remaining values.
+        
+        while (++i < n) { 
           if ((value = valueof(values[i], i, values)) != null && value > max) {
             max = value;
           }

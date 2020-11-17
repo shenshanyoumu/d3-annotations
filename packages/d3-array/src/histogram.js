@@ -9,7 +9,8 @@ import sturges from "./threshold/sturges";
 
 /**
  * 与其他图表库直接将数据绑定到特定图表不同，d3引入了图表生成器generator概念；
- * generator可以将原始数据进行转换处理，从而适配特定的图表
+ * generator可以将原始数据进行转换处理，从而适配特定的图表。本质上就是在数据和渲染器中间
+ * 增加了一个抽象层，这样渲染器负责渲染即可
  */
 export default function() {
   var value = identity, //默认为等值函数

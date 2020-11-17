@@ -1,12 +1,16 @@
 import ascending from "./ascending";
 
 /**
- *  数组的二等分操作
- * @param {*} compare compare函数接受单参数
+ * 数组二分器，属于二分排序器的扩展。即当x不在给定数组中时，会返回
+ * x最接近的两个数字之一
+ * @param {*} compare 排序子函数
  */
 export default function(compare) {
+  /** 将单参数函数转换为升序排序子函数，注意下面赋值语句中
+   *  两个compare指向不同的引用，其中参数compare函数依然接受单参数
+   *  用于将数值进行转换
+   */
   if (compare.length === 1) {
-    /** 注意下面compare函数作为参数传递进ascendingComparator函数后，作为闭包保留；然后compare被重新赋值 */
     compare = ascendingComparator(compare);
   }
 
@@ -26,6 +30,7 @@ export default function(compare) {
       }
       return lo;
     },
+
     right: function(a, x, lo, hi) {
       if (lo == null) lo = 0;
       if (hi == null) hi = a.length;
@@ -39,6 +44,10 @@ export default function(compare) {
   };
 }
 
+/**
+ * d3的实现偏重于函数式编程思想
+ * @param {*} f 在范畴论属于函子，表示两个集合的映射关系
+ */
 function ascendingComparator(f) {
   return function(d, x) {
     return ascending(f(d), x);

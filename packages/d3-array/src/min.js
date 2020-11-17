@@ -16,7 +16,7 @@ export default function(values, valueof) {
       /** value>=value这一步操作并非多此一举，实际上就是确保元素间的可比较性 */
       if ((value = values[i]) != null && value >= value) {
         min = value;
-        while (++i < n) { // Compare the remaining values.
+        while (++i < n) { 
           if ((value = values[i]) != null && min > value) {
             min = value;
           }
@@ -26,10 +26,10 @@ export default function(values, valueof) {
   }
 
   else {
-    while (++i < n) { // Find the first comparable value.
+    while (++i < n) { 
       if ((value = valueof(values[i], i, values)) != null && value >= value) {
         min = value;
-        while (++i < n) { // Compare the remaining values.
+        while (++i < n) { 
           if ((value = valueof(values[i], i, values)) != null && min > value) {
             min = value;
           }

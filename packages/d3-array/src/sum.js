@@ -11,7 +11,8 @@ export default function(values, valueof) {
 
   if (valueof == null) {
     while (++i < n) {
-      if (value = +values[i]) sum += value; // Note: zero and null are equivalent.
+      // 当values[i]无法转换为数值，则sum不会被累加
+      if (value = +values[i]) sum += value; 
     }
   }
 

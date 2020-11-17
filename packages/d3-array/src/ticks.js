@@ -3,7 +3,7 @@ var e10 = Math.sqrt(50),
     e2 = Math.sqrt(2);
 
 /**
- * 根据参数返回一组良定的刻度值，每个值都是转换为以10为底的幂
+ * 根据参数返回长度为count+1的刻度值数组，每个元素值都会转换为以10为底的幂
  * @param {*} start 
  * @param {*} stop 
  * @param {*} count 
@@ -47,7 +47,8 @@ export default function(start, stop, count) {
 }
 
 /**
- * 类似tickStep函数，除了要求start小于等于step
+ * 类似tickStep函数，除了要求start小于等于step；
+ * 如果计算得到的tickStep小于
  * @param {*} start 
  * @param {*} stop 
  * @param {*} count 
@@ -66,16 +67,20 @@ export function tickIncrement(start, stop, count) {
 }
 
 /**
- * 在给定参数下返回刻度距离，由于IEEE754浮动限制，返回值可能不是整数，在web可以格式化来展示
+ * 返回两个相邻刻度值的差值，由于IEEE754浮动限制，
+ * 返回值可能不是整数，可以使用d3-format模块进行格式化
  * @param {*} start 
  * @param {*} stop 
  * @param {*} count 
  */
 export function tickStep(start, stop, count) {
-  /** step0表示数学意义上的均分值，但是受计算机数值表示位数限制，step0并非精确均分 */
+  /** 
+   *  step0表示数学意义上的均分值，
+   *  但是受计算机数值表示位数限制，step0并非精确均分 
+   */
   var step0 = Math.abs(stop - start) / Math.max(0, count),
 
-      //Math.LN10表示10的自然对数值
+      //Math.LN10表示10的自然对数值，Math.log表示以自然数e为底的对数
       step1 = Math.pow(10, Math.floor(Math.log(step0) / Math.LN10)),
      
       error = step0 / step1;
@@ -84,5 +89,6 @@ export function tickStep(start, stop, count) {
   if (error >= e10) step1 *= 10;
   else if (error >= e5) step1 *= 5;
   else if (error >= e2) step1 *= 2;
+  
   return stop < start ? -step1 : step1;
 }
