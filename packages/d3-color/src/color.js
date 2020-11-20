@@ -8,15 +8,27 @@ export function Color() {}
 export var darker = 0.7;
 export var brighter = 1 / darker;
 
-var reI = "\\s*([+-]?\\d+)\\s*", // 数字串正则，可以正确匹配前后具有空格的数字串
+var reI = "\\s*([+-]?\\d+)\\s*", // 数字串正则
     reN = "\\s*([+-]?\\d*\\.?\\d+(?:[eE][+-]?\\d+)?)\\s*", //浮点数字串正则
-    reP = "\\s*([+-]?\\d*\\.?\\d+(?:[eE][+-]?\\d+)?)%\\s*", //携带%符号的浮点数字符串正则
-    reHex = /^#([0-9a-f]{3,8})$/, //3-8位的十六进制数字串
-    reRgbInteger = new RegExp("^rgb\\(" + [reI, reI, reI] + "\\)$"), // 对rgb(int,int,int)字符串的匹配，
-    reRgbPercent = new RegExp("^rgb\\(" + [reP, reP, reP] + "\\)$"), // 对rgb(%float,%float,%float)字符串的匹配
-    reRgbaInteger = new RegExp("^rgba\\(" + [reI, reI, reI, reN] + "\\)$"), //对rgba()字符串匹配
-    reRgbaPercent = new RegExp("^rgba\\(" + [reP, reP, reP, reN] + "\\)$"), //对RGBA(%flaot,%float,%float)字符串匹配
-    reHslPercent = new RegExp("^hsl\\(" + [reN, reP, reP] + "\\)$"), //HSL颜色空间表示字符串
+
+    //携带%符号的浮点数字符串正则
+    reP = "\\s*([+-]?\\d*\\.?\\d+(?:[eE][+-]?\\d+)?)%\\s*", 
+    reHex = /^#([0-9a-f]{3,8})$/, //3-8位的十六进制数字串正则
+
+    // 对rgb(int,int,int)字符串的匹配
+    reRgbInteger = new RegExp("^rgb\\(" + [reI, reI, reI] + "\\)$"), 
+
+    // 对rgb(%float,%float,%float)字符串的匹配
+    reRgbPercent = new RegExp("^rgb\\(" + [reP, reP, reP] + "\\)$"), 
+
+    //对rgba(int,int,int,float)字符串匹配，即具有透明度的RGB颜色空间
+    reRgbaInteger = new RegExp("^rgba\\(" + [reI, reI, reI, reN] + "\\)$"), 
+
+    //对RGBA(%flaot,%float,%float)字符串匹配
+    reRgbaPercent = new RegExp("^rgba\\(" + [reP, reP, reP, reN] + "\\)$"),
+    
+    //HSL颜色空间表示字符串
+    reHslPercent = new RegExp("^hsl\\(" + [reN, reP, reP] + "\\)$"),
     reHslaPercent = new RegExp("^hsla\\(" + [reN, reP, reP, reN] + "\\)$");
 
   /** 具名颜色 */
@@ -186,10 +198,12 @@ define(Color, color, {
   toString: color_formatRgb
 });
 
+// RGB颜色空间下的颜色16进制表示
 function color_formatHex() {
   return this.rgb().formatHex();
 }
 
+// 基于HSL颜色空间的格式化输出
 function color_formatHsl() {
   return hslConvert(this).formatHsl();
 }
@@ -221,6 +235,7 @@ export default function color(format) {
       : null;
 }
 
+// 将数值型的二进制形式分段赋值给RGB颜色空间分量
 function rgbn(n) {
   return new Rgb(n >> 16 & 0xff, n >> 8 & 0xff, n & 0xff, 1);
 }
@@ -230,6 +245,7 @@ function rgba(r, g, b, a) {
   return new Rgb(r, g, b, a);
 }
 
+// Color对象可以调用rgb方法输出rgb形态的结构，然后构造RGB对象
 export function rgbConvert(o) {
   if (!(o instanceof Color)) o = color(o);
   if (!o) return new Rgb;
@@ -239,7 +255,9 @@ export function rgbConvert(o) {
 
 // 
 export function rgb(r, g, b, opacity) {
-  return arguments.length === 1 ? rgbConvert(r) : new Rgb(r, g, b, opacity == null ? 1 : opacity);
+  return arguments.length === 1 ?
+         rgbConvert(r) : new Rgb(r, g, b, opacity == null ?
+         1 : opacity);
 }
 
 export function Rgb(r, g, b, opacity) {
@@ -262,7 +280,10 @@ define(Rgb, rgb, extend(Color, {
     return this;
   },
 
-  // 针对设置的RGBA样式字符串，需要判断是否是合法的。只有合法的RGBA样式设置才能显示出
+  /**
+   * 针对设置的RGBA样式字符串，需要判断是否是合法的;
+   * 只有合法的RGBA样式设置才能显示出
+   */
   displayable: function() {
     return (-0.5 <= this.r && this.r < 255.5)
         && (-0.5 <= this.g && this.g < 255.5)
@@ -288,6 +309,7 @@ function rgb_formatRgb() {
       + (a === 1 ? ")" : ", " + a + ")");
 }
 
+// 数值的16进制表示，将value预处理限定范围[0,255]，然后调用toString(radix)输出
 function hex(value) {
   value = Math.max(0, Math.min(255, Math.round(value) || 0));
   return (value < 16 ? "0" : "") + value.toString(16);
