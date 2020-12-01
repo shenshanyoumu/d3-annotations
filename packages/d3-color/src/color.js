@@ -1,7 +1,8 @@
 import define, {extend} from "./define.js";
 
 /**
- * 默认继承自Object对象
+ * Color构造函数，注意所有颜色空间子类都继承自Color基类
+ * 因此具有颜色空间的各种格式化输出方法，以及displayable接口
  */
 export function Color() {}
 
@@ -208,12 +209,13 @@ function color_formatHsl() {
   return hslConvert(this).formatHsl();
 }
 
+// 基于RGB颜色空间的格式化输出
 function color_formatRgb() {
   return this.rgb().formatRgb();
 }
 
 /**
- * 
+ * 根据各种颜色空间下的颜色字符串，调用相应构造器生成不同颜色空间下的颜色对象
  * @param {*} format 适配各种颜色空间的格式化字符串
  */
 export default function color(format) {
@@ -249,6 +251,7 @@ function rgba(r, g, b, a) {
 export function rgbConvert(o) {
   if (!(o instanceof Color)) o = color(o);
   if (!o) return new Rgb;
+  
   o = o.rgb();
   return new Rgb(o.r, o.g, o.b, o.opacity);
 }
@@ -328,6 +331,8 @@ export function hslConvert(o) {
   if (!(o instanceof Color)) o = color(o);
   if (!o) return new Hsl;
   if (o instanceof Hsl) return o;
+  
+  // 确保o对象是Rgb类对象
   o = o.rgb();
   var r = o.r / 255,
       g = o.g / 255,
@@ -337,6 +342,7 @@ export function hslConvert(o) {
       h = NaN,
       s = max - min,
       l = (max + min) / 2;
+
   if (s) {
     if (r === max) h = (g - b) / s + (g < b) * 6;
     else if (g === max) h = (b - r) / s + 2;
@@ -346,13 +352,17 @@ export function hslConvert(o) {
   } else {
     s = l > 0 && l < 1 ? 0 : h;
   }
+
+
   return new Hsl(h, s, l, o.opacity);
 }
 
+// hsl颜色空间的工厂函数，用于生成HSL对象
 export function hsl(h, s, l, opacity) {
   return arguments.length === 1 ? hslConvert(h) : new Hsl(h, s, l, opacity == null ? 1 : opacity);
 }
 
+// Hsl构造函数
 function Hsl(h, s, l, opacity) {
   this.h = +h;
   this.s = +s;
@@ -360,6 +370,8 @@ function Hsl(h, s, l, opacity) {
   this.opacity = +opacity;
 }
 
+
+// 
 define(Hsl, hsl, extend(Color, {
   brighter: function(k) {
     k = k == null ? brighter : Math.pow(brighter, k);
