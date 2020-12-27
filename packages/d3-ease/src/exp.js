@@ -1,3 +1,4 @@
+// 时间参数t区间[0,1]返回值增加
 export function expIn(t) {
   return Math.pow(2, 10 * t - 10);
 }

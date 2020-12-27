@@ -11,7 +11,7 @@ export function sinOut(t) {
   return Math.sin(t * halfPi);
 }
 
-
+// 当t取值区间[0,1]值逐渐变大，而在[1,2]区间则值逐渐变小
 export function sinInOut(t) {
   return (1 - Math.cos(pi * t)) / 2;
 }

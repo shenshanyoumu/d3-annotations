@@ -6,31 +6,38 @@ var EOL = {},
 
 /**
  * 
- * @param {*} columns 表示TSV内容列
+ * @param {*} columns 表示表头名称数组，比如['name','sex']
+ * 返回新建函数t，函数t接收数组形式的表格数据['sam','female']，并返回键值对形式
+ * {name:'sam',sex:'female'}
  */
 function objectConverter(columns) {
-  return new Function("d", "return {" + columns.map(function(name, i) {
+  return new Function("d", "return {" 
+    + columns.map(function(name, i) {
     return JSON.stringify(name) + ": d[" + i + "] || \"\"";
   }).join(",") + "}");
 }
 
 /**
- * 逐行读取TSV内容，并按照tab分割文本。最后通过f格式函数进行格式化
- * @param {*} columns 
- * @param {*} f 
+ * 
+ * @param {*} columns 表示表头字段数组
+ * @param {*} f 自定义的转换函数
  */
 function customConverter(columns, f) {
+  // object函数接收字段数组，并返回相应的键值对形式
   var object = objectConverter(columns);
+
+  // 新函数接收tabular-数据行和行索引
   return function(row, i) {
     return f(object(row), i, columns);
   };
 }
 
-// Compute unique columns in order of discovery.
+// 根据形如[{key1:value1,key2:value2}]的数据行形式反推表头字段数组
 function inferColumns(rows) {
   var columnSet = Object.create(null),
       columns = [];
-
+  
+  // 知识点：for...in，输出对象及其原型链对象所有可枚举的属性
   rows.forEach(function(row) {
     for (var column in row) {
       if (!(column in columnSet)) {
@@ -39,6 +46,7 @@ function inferColumns(rows) {
     }
   });
 
+  // 注意最终columns每个元素都是一样的对象，因为共享columnSet对象
   return columns;
 }
 
@@ -56,15 +64,19 @@ function formatYear(year) {
 }
 
 /**
- * 
+ * 将本地化时间对象转换为格式化的UTC时间对象
  * @param {*} date 表示本地化的时间对象
  */
 function formatDate(date) {
-  /** 将本地时间归一化为时间调谐时间处理 */
+  /** 
+   * UTC-universal time coordinated，即协调世界时
+   * getUTCHours()返回本地时间与UTC时间的小时差值
+   */
   var hours = date.getUTCHours(),
       minutes = date.getUTCMinutes(),
       seconds = date.getUTCSeconds(),
       milliseconds = date.getUTCMilliseconds();
+
   return isNaN(date) ? "Invalid Date"
       : formatYear(date.getUTCFullYear(), 4) + "-" + pad(date.getUTCMonth() + 1, 2) + "-" + pad(date.getUTCDate(), 2)
       + (milliseconds ? "T" + pad(hours, 2) + ":" + pad(minutes, 2) + ":" + pad(seconds, 2) + "." + pad(milliseconds, 3) + "Z"
@@ -78,6 +90,7 @@ function formatDate(date) {
  * @param {*} delimiter 
  */
 export default function(delimiter) {
+  //分隔符+'\n\r'用于数据换行后的分隔处理
   var reFormat = new RegExp("[\"" + delimiter + "\n\r]"),
 
       /** 返回某个字符的Unicode编码值 */
@@ -154,6 +167,12 @@ export default function(delimiter) {
     return rows;
   }
 
+  /**
+   * tabular数据的格式化，
+   * 返回[value1\delimiter\value2,value3\delimiter\value3]形式
+   * @param {*} rows 形如[{key1:value1,key2:value2}] 的数据行
+   * @param {*} columns 形如[key1,key2]的表头名称数组
+   */
   function preformatBody(rows, columns) {
     return rows.map(function(row) {
       return columns.map(function(column) {
@@ -162,11 +181,15 @@ export default function(delimiter) {
     });
   }
 
+  // 将tabular的表头和数据行整合格式化输出
   function format(rows, columns) {
     if (columns == null) columns = inferColumns(rows);
-    return [columns.map(formatValue).join(delimiter)].concat(preformatBody(rows, columns)).join("\n");
+    return [columns.map(formatValue).join(delimiter)]
+      .concat(preformatBody(rows, columns))
+      .join("\n");
   }
 
+  // 如果没有传递表头名称数组，则从数据行中推导出表头
   function formatBody(rows, columns) {
     if (columns == null) columns = inferColumns(rows);
     return preformatBody(rows, columns).join("\n");
@@ -180,6 +203,7 @@ export default function(delimiter) {
     return row.map(formatValue).join(delimiter);
   }
 
+  // 格式化键值，对时间对象单独处理
   function formatValue(value) {
     return value == null ? ""
         : value instanceof Date ? formatDate(value)

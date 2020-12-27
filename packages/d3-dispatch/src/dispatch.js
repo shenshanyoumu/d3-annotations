@@ -6,7 +6,10 @@ var noop = {value: function() {}};
 // 初始化事件分发器，参数为事件类型列表。注意事件名不能有空格和"."符号
 function dispatch() {
   for (var i = 0, n = arguments.length, _ = {}, t; i < n; ++i) {
-    /** 下面表示事件类型type不能为空 */
+    /** 
+     * 下面表示事件类型type不能为空，或者事件类型type不能重复，
+     * 或者事件类型type不能存在空格和"."符号
+     */
     if (!(t = arguments[i] + "") || (t in _) || /[\s.]/.test(t)) 
       throw new Error("illegal type: " + t);
    
@@ -36,10 +39,12 @@ function parseTypenames(typenames, types) {
     /** 分发未知事件类型，则直接抛错 */
     if (t && !types.hasOwnProperty(t)) throw new Error("unknown type: " + t);
     
+    // 将注册的事件字符串拆分为事件类型和事件名的对象形式
     return {type: t, name: name};
   });
 }
 
+//Dispatch表示constructor，而dispatch表示factory函数
 Dispatch.prototype = dispatch.prototype = {
   constructor: Dispatch,
 
@@ -93,8 +98,9 @@ Dispatch.prototype = dispatch.prototype = {
     return new Dispatch(copy);
   },
 
-  /** call方式分发事件，第一个参数为事件类型；第二个参数为执行上下文对象；
-   *  多余参数为事件回调函数的操作
+  /** 
+   * call方式分发事件，第一个参数为事件类型；第二个参数为执行上下文对象；
+   * 多余参数为事件回调函数的操作
    */
   call: function(type, that) {
     if ((n = arguments.length - 2) > 0) {
