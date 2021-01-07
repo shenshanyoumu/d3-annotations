@@ -8,9 +8,9 @@ function textConstant(value) {
   };
 }
 
+//value表示文本生成函数
 function textFunction(value) {
   return function() {
-    /** 注意apply第一个参数this的指向 */
     var v = value.apply(this, arguments);
     this.textContent = v == null ? "" : v;
   };

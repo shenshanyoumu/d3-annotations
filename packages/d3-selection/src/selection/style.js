@@ -1,5 +1,6 @@
 import defaultView from "../window";
 
+// 遵循W3C规范，用于删除特定的DOM样式
 function styleRemove(name) {
   return function() {
     this.style.removeProperty(name);
@@ -31,7 +32,10 @@ export default function(name, value, priority) {
       : styleValue(this.node(), name);
 }
 
+/** 基础方法都遵循标准的W3C规范 */
 export function styleValue(node, name) {
   return node.style.getPropertyValue(name)
-      || defaultView(node).getComputedStyle(node, null).getPropertyValue(name);
+      || defaultView(node)
+        .getComputedStyle(node, null)
+        .getPropertyValue(name);
 }

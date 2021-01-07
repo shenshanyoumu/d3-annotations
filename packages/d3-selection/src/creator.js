@@ -2,7 +2,6 @@ import namespace from "./namespace";
 import {xhtml} from "./namespaces";
 
 // d3-selection的能力基于DOM规范，因此需要为宿主环境赋予正确的DTD
-
 function creatorInherit(name) {
   return function() {
     var document = this.ownerDocument,
@@ -25,7 +24,7 @@ function creatorFixed(fullname) {
 }
 
 /** selection选择器不仅仅针对HTML，还针对XHTML、XML等，
- * 因此需要指定宿主解析的文档类型和版本
+ *  因此需要指定宿主解析的文档类型和版本
  *  */
 export default function(name) {
   var fullname = namespace(name);

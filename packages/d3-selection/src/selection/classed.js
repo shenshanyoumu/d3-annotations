@@ -2,7 +2,7 @@ function classArray(string) {
   return string.trim().split(/^|\s+/);
 }
 
-/**  */
+/** 节点的class属性列表 */
 function classList(node) {
   return node.classList || new ClassList(node);
 }

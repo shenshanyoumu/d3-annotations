@@ -1,4 +1,5 @@
-/** 注意property是DOM对象的属性；而attribute是HTML标签上的某个属性 */
+/** 注意property是DOM对象的属性；
+ *  而attribute是markup language标签上的某个属性 */
 function propertyRemove(name) {
   return function() {
     delete this[name];

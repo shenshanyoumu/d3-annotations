@@ -19,7 +19,7 @@ function dispatchEvent(node, type, params) {
     else event.initEvent(type, false, false);
   }
 
-  // 触发事件信号
+  // 触发事件信号，该方法由宿主环境提供
   node.dispatchEvent(event);
 }
 
@@ -29,6 +29,7 @@ function dispatchConstant(type, params) {
   };
 }
 
+// params参数是一个函数
 function dispatchFunction(type, params) {
   return function() {
     return dispatchEvent(this, type, params.apply(this, arguments));
