@@ -5,7 +5,8 @@ export default function(compare) {
   /** 排序算子，默认为关键字升序排序 */
   if (!compare) compare = ascending;
 
-  /** DOM节点是一个对象，不能简单比较两个对象的大小，需要选择对象关键字进行比较 */
+  /** 参数是DOM对象，因此不能简单比较大小
+   *  需要选择对象关键字进行比较 */
   function compareNode(a, b) {
     return a && b ? compare(a.__data__, b.__data__) : !a - !b;
   }
@@ -26,6 +27,7 @@ export default function(compare) {
   return new Selection(sortgroups, this._parents).order();
 }
 
+/** >= 操作看似多余，实际上主要用于等值比较 */
 function ascending(a, b) {
   return a < b ? -1 : a > b ? 1 : a >= b ? 0 : NaN;
 }

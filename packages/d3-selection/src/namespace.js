@@ -1,9 +1,8 @@
 import namespaces from "./namespaces";
 
 /**
- * 
  * @param {*} name 类似"xml"或者"xml:xxx"形式。
- * 最终返回预制namespaces中的同key键值对
+ * 最终返回预置在namespaces中的同key键值对
  */
 export default function(name) {
   var prefix = name += "", i = prefix.indexOf(":");

@@ -3,9 +3,11 @@ var pi = Math.PI,
     epsilon = 1e-6,//精度
     tauEpsilon = tau - epsilon;
 
+// Path表示路径类，而path表示路径对象的factory函数
+//[[x0,y0],[x1,y1]]定义subPath
 function Path() {
-  this._x0 = this._y0 = // start of current subpath
-  this._x1 = this._y1 = null; // end of current subpath
+  this._x0 = this._y0 = 
+  this._x1 = this._y1 = null; 
   this._ = ""; //表示绘制指令directive
 }
 
@@ -16,10 +18,11 @@ function path() {
 Path.prototype = path.prototype = {
   constructor: Path,
 
-  /** 转化为svg的move操作 */
+  /** 默认转化为svg的move操作 */
   moveTo: function(x, y) {
     this._ += "M" + (this._x0 = this._x1 = +x) + "," + (this._y0 = this._y1 = +y);
   },
+
   closePath: function() {
     if (this._x1 !== null) {
       this._x1 = this._x0, this._y1 = this._y0;
@@ -40,8 +43,19 @@ Path.prototype = path.prototype = {
   bezierCurveTo: function(x1, y1, x2, y2, x, y) {
     this._ += "C" + (+x1) + "," + (+y1) + "," + (+x2) + "," + (+y2) + "," + (this._x1 = +x) + "," + (this._y1 = +y);
   },
+
+  /**
+   * 
+   * @param {*} x1 圆弧开始端点坐标X分量
+   * @param {*} y1 圆弧开始端点坐标Y分量
+   * @param {*} x2 圆弧结束端点坐标X分量
+   * @param {*} y2 圆弧结束端点坐标Y分量
+   * @param {*} r 圆弧半径
+   */
   arcTo: function(x1, y1, x2, y2, r) {
     x1 = +x1, y1 = +y1, x2 = +x2, y2 = +y2, r = +r;
+
+    // 之所以引入[x0,y0]是针对圆弧绘制作为全局绘制的一部分的场景
     var x0 = this._x1,
         y0 = this._y1,
         x21 = x2 - x1,
@@ -50,10 +64,11 @@ Path.prototype = path.prototype = {
         y01 = y0 - y1,
         l01_2 = x01 * x01 + y01 * y01;
 
-    // Is the radius negative? Error.
+    // 圆弧半径合法性检查
     if (r < 0) throw new Error("negative radius: " + r);
 
-    // fallback处理，如果待绘制的弧线只有一个点，则采用M指令定位到
+    // 如果在绘制圆弧之前，path对象没有绘制过任何路径。则直接
+    // 通过M指令将绘制点移动到[x1,y1]位置
     if (this._x1 === null) {
       this._ += "M" + (this._x1 = x1) + "," + (this._y1 = y1);
     }
@@ -61,12 +76,12 @@ Path.prototype = path.prototype = {
     // 如果两个点几乎出现在同一位置，则根本无法绘制弧线
     else if (!(l01_2 > epsilon));
 
-    /** 如果两点共线，或者弧度为0，则当做直线绘制指令处理 */
+    /** 如果[x1,y1]和Path当前绘制点[_x1,_y1]共线，则直接基于L指令绘制直线 */
     else if (!(Math.abs(y01 * x21 - y21 * x01) > epsilon) || !r) {
       this._ += "L" + (this._x1 = x1) + "," + (this._y1 = y1);
     }
 
-    // Otherwise, draw an arc!
+    // 其他场景就是绘制圆弧操作
     else {
       var x20 = x2 - x0,
           y20 = y2 - y0,
@@ -82,7 +97,8 @@ Path.prototype = path.prototype = {
       if (Math.abs(t01 - 1) > epsilon) {
         this._ += "L" + (x1 + t01 * x01) + "," + (y1 + t01 * y01);
       }
-
+      
+      // 基于SVG的A指令来绘制圆弧
       this._ += "A" + r + "," + r + ",0,0," + (+(y01 * x20 > x01 * y20)) + "," + (this._x1 = x1 + t21 * x21) + "," + (this._y1 = y1 + t21 * y21);
     }
   },
@@ -127,11 +143,13 @@ Path.prototype = path.prototype = {
       this._ += "A" + r + "," + r + ",0," + (+(da >= pi)) + "," + cw + "," + (this._x1 = x + r * Math.cos(a1)) + "," + (this._y1 = y + r * Math.sin(a1));
     }
   },
+  // 绘制矩形
   rect: function(x, y, w, h) {
     this._ += "M" + (this._x0 = this._x1 = +x) + "," + (this._y0 = this._y1 = +y) + "h" + (+w) + "v" + (+h) + "h" + (-w) + "Z";
   },
 
-  /** 将svg绘制指令字符串形式输出,注意该方法是对Object.prototype.toString的重写 */
+  /** 将svg绘制指令字符串形式输出,
+  / * 注意该方法是对Object.prototype.toString的重写 */
   toString: function() {
     return this._;
   }

@@ -1,6 +1,6 @@
 export var xhtml = "http://www.w3.org/1999/xhtml";
 
-/** 多种形式的DOM规范，用于指导浏览器正确解析 */
+/** 多种形式的DOM 命名空间，用于指导浏览器正确解析文档对象 */
 export default {
   svg: "http://www.w3.org/2000/svg",
   xhtml: xhtml,

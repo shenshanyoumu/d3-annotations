@@ -1,6 +1,8 @@
 import {Selection} from "./index";
 
-/** 两个选择集的合并处理，具体操作是将this._groups作为主体 */
+/** 两个选择集的合并处理，具体操作是将参数selection._groups合并进this._groups
+ *  最终的合并选择集容量等于this._groups的容量
+ */
 export default function(selection) {
 
   /** this表示当前节点，而selection表示已经存在的选择集对象 */
@@ -12,6 +14,7 @@ export default function(selection) {
       merge = merges[j] = new Array(n), node, i = 0; i < n; ++i) {
       
       // 注意上面merge=merges[i]，意味着merge的修改基于引用机制也会同步修改到merge[j]对象上
+      // 最终修改merges[j][i]
       if (node = group0[i] || group1[i]) {
         merge[i] = node;
       }

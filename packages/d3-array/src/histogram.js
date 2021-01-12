@@ -14,7 +14,7 @@ import sturges from "./threshold/sturges";
  */
 export default function() {
   var value = identity, //默认为等值函数
-      domain = extent, //直方图值域
+      domain = extent, //直方图定义域
       threshold = sturges; //直方图bin容量计算经验公式
 
   function histogram(data) {

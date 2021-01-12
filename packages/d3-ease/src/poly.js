@@ -1,9 +1,11 @@
 var exponent = 3;
 
-// 多项式渐入，可以自定义指数
+// 多项式渐入方程，注意这种代码的含义
 export var polyIn = (function custom(e) {
+  //将参数数值化处理的常用方式
   e = +e;
-
+  
+  //联想jQuery的链式调用形式。通过形如polyIn.exponent().exponent()()来执行
   function polyIn(t) {
     return Math.pow(t, e);
   }

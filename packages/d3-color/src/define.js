@@ -15,8 +15,11 @@ export default function(constructor, factory, prototype) {
  * @param {*} definition 
  */
 export function extend(parent, definition) {
-  // Object.create创建一个新对象
   var prototype = Object.create(parent.prototype);
-  for (var key in definition) prototype[key] = definition[key];
+
+  for (var key in definition) {
+    prototype[key] = definition[key];
+  }
+
   return prototype;
 }
