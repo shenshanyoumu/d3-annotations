@@ -1,5 +1,6 @@
 import interval from "./interval.js";
 
+/** ECMA规范的Date对象通过set方法来设置时间到1970年的毫秒数 */
 var year = interval(function(date) {
   date.setMonth(0, 1);
   date.setHours(0, 0, 0, 0);

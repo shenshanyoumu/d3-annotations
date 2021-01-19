@@ -9,10 +9,10 @@ var noabort = {};
  */
 function Queue(size) {
   this._size = size; //任务队列总容量
-  this._call = //队列执行await时的临时函数
+  this._call = //队列执行await函数状态
   this._error = null; //任务队列执行异常时的函数
   this._tasks = []; //基于数组来保存任务实例,每个任务都是一个函数。任务函数最后一个参数为回调函数
-  this._data = [];
+  this._data = []; //保存异步任务的执行结果
   this._waiting = //等待执行的任务数
   this._active = //表示正在执行的任务数
   this._ended = //表示已经结束的任务数
@@ -31,17 +31,21 @@ Queue.prototype = queue.prototype = {
     /** 表明任务队列执行发生错误，因此直接返回this对象 */
     if (this._error != null) return this;
 
-    /** 每个任务函数都必须有一个回调函数;下面变量t表示一个任务的参数数组 */
+    /** 每个异步任务都必须有一个回调函数;
+     * 下面变量t表示一个异步任务的参数数组 */
     var t = slice.call(arguments, 1);
     t.push(callback);
     ++this._waiting, this._tasks.push(t);
 
     /** 启动任务队列执行过程 */
     poke(this);
+
+    //返回this对象，才能形成链式调用过程
     return this;
   },
 
-  /** 终止任务队列的执行过程，如果任务队列已经发生错误则不能终止 */
+  /** 终止任务队列的执行过程，
+   *  如果任务队列已经发生错误则不能终止 */
   abort: function() {
     if (this._error == null) abort(this, new Error("abort"));
     return this;
@@ -52,14 +56,15 @@ Queue.prototype = queue.prototype = {
     if (typeof callback !== "function") 
       throw new Error("invalid callback");
     
-    /** 执行await操作，则在队列内部通过_call指针进行调用；其中results表示任务执行结果 */
+    /** 异步任务只能存在一个await调用 */
     if (this._call) throw new Error("multiple await");
+
+    //await函数注册
     this._call = function(error, results) { 
-      // 注意apply绑定null、undefined，表示全局window调用
       callback.apply(null, [error].concat(results)); 
     };
    
-   
+    
     maybeNotify(this);
     return this;
   },
@@ -67,8 +72,10 @@ Queue.prototype = queue.prototype = {
   awaitAll: function(callback) {
     if (typeof callback !== "function") 
       throw new Error("invalid callback");
+
     if (this._call) throw new Error("multiple await");
     this._call = callback;
+
     maybeNotify(this);
     return this;
   }
@@ -88,6 +95,7 @@ function poke(q) {
   }
 }
 
+// 异步队列执行并发数的控制逻辑，通过_waiting指示器控制
 function start(q) {
   while (q._start = q._waiting && q._active < q._size) {
     var i = q._ended + q._active, //结束的任务数和正在执行的任务数
@@ -155,7 +163,7 @@ function abort(q, e) {
  * @param {*} q 任务队列实例
  */
 function maybeNotify(q) {
-  /** 没有正在执行的任务，并且没有await/awaitAll操作 */
+  /** 没有正在执行的任务，并且调用过await/awaitAll函数 */
   if (!q._active && q._call) {
     var d = q._data;
     q._data = undefined; // allow gc

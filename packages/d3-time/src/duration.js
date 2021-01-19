@@ -1,4 +1,4 @@
-/** 以毫秒为基础单位 */
+/** 以毫秒为基准单位 */
 export var durationSecond = 1e3;
 export var durationMinute = 6e4;
 export var durationHour = 36e5;

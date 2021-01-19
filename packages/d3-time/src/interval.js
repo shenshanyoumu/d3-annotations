@@ -3,12 +3,16 @@ var t0 = new Date,
 
 export default function newInterval(floori, offseti, count, field) {
 
-  /** 参数arguments表示interval函数的形参；如果没有传入参数则默认为当前时间 */
+  /** JS中函数也是对象，可以挂载多个方法。
+   *  下面floori为函数参数，接收ECMA规范的日期对象  
+   * */
   function interval(date) {
     return floori(date = arguments.length === 0 ? new Date : new Date(+date)), date;
   }
 
-  /** 注意下面的编程方式故意修改了形参，这是因为date参数为引用传递 */
+  /** 基于外部floori函数来处理日期的向下取值
+   * 
+   */
   interval.floor = function(date) {
     return floori(date = new Date(+date)), date;
   };
@@ -30,27 +34,35 @@ export default function newInterval(floori, offseti, count, field) {
     return offseti(date = new Date(+date), step == null ? 1 : Math.floor(step)), date;
   };
 
-  /** 针对时序的ticks生成器，注意step的向下取整逻辑 */
+  /** 针对时序的ticks生成器，注意step向下取整逻辑 */
   interval.range = function(start, stop, step) {
     var range = [], previous;
     start = interval.ceil(start);
     step = step == null ? 1 : Math.floor(step);
-    if (!(start < stop) || !(step > 0)) return range; // also handles Invalid Date
+
+    //参数合法性判断
+    if (!(start < stop) || !(step > 0)) return range; 
+
+    //注意最终的时间区间[start,stop)
     do range.push(previous = new Date(+start)), offseti(start, step), floori(start);
     while (previous < start && start < stop);
+
     return range;
   };
 
-  /** interval对象的filter函数，通过传递的测试函数来进行过滤处理 */
+  /** 从函数式编程思路上，所有函子操作返回的函数同一个范畴的对象，
+   *  因此返回newInterval函数对象 */
   interval.filter = function(test) {
     return newInterval(function(date) {
       if (date >= date) while (floori(date), !test(date)) date.setTime(date - 1);
-    }, function(date, step) {
+    }, 
+    //第二个参数为offseti函数参数
+    function(date, step) {
       if (date >= date) {
         if (step < 0) while (++step <= 0) {
-          while (offseti(date, -1), !test(date)) {} // eslint-disable-line no-empty
+          while (offseti(date, -1), !test(date)) {} 
         } else while (--step >= 0) {
-          while (offseti(date, +1), !test(date)) {} // eslint-disable-line no-empty
+          while (offseti(date, +1), !test(date)) {} 
         }
       }
     });
@@ -66,6 +78,8 @@ export default function newInterval(floori, offseti, count, field) {
 
     interval.every = function(step) {
       step = Math.floor(step);
+
+      //确保step参数为正数
       return !isFinite(step) || !(step > 0) ? null
           : !(step > 1) ? interval
           : interval.filter(field

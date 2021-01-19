@@ -5,9 +5,8 @@ var frame = 0, //
     timeout = 0, // is a timeout pending?
     interval = 0, // are any timers active?
 
-    // 表示检查时钟tick的间隙，比如每秒钟检查当前时刻
-    // 如果存在计时器计时结束则执行回调任务；任务的执行时机可能存在1秒的检查误差
-    pokeDelay = 1000, // how frequently we check for clock skew
+    /** 周期性调用回调的时间差，注意最终两次回调间隔依赖JS运行时 */
+    pokeDelay = 1000, 
     
     // 计时器队列，即可以存在多个计时器实例；
     // 每个计时器处理一系列动画帧任务
